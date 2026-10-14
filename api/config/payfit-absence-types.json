@@ -1,0 +1,11 @@
+{
+  "CONGES_PAYES": ["fr_conges_payes", "fr_conges_payes_fractionnement"],
+  "ARRET_MALADIE": ["fr_maladie_ordinaire"],
+  "SANS_SOLDE": ["fr_conge_sans_solde"],
+  "ENFANT_MALADE": ["fr_enfant_malade"],
+  "ACCIDENT_TRAVAIL": ["fr_accident_travail"],
+  "RECUPERATION": ["fr_recuperation"],
+  "SANS_JUSTIFICATIF": [],
+  "EVENEMENT_FAMILIAL": ["fr_evenement_familial"],
+  "AUTRE": ["other", "colleague_autre"]
+}

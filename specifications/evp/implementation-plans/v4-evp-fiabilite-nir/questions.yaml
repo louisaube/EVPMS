@@ -1,0 +1,111 @@
+# Questions pour le propriétaire : specifications/evp/implementation-plans/v4-evp-fiabilite-nir/questions.yaml
+# Cinq questions (trois du frontend, deux du backend : Q-EVP-16, Q-EVP-17). Chacune change ce qui est construit et donc la recette ; le défaut recommandé est écrit dans les plans.
+- id: Q-EVP-18
+  titre: Contrôle de la portée PayFit pour les sociétés sans NIR dans Aqoona
+  regles: [rule-evp-payfit-scope-coverage]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "La clé PayFit de la société Alpha n'a pas la portée collaborators:social-security:read. Aucune ligne Aqoona des crèches d'Alpha ne porte de NIR dans la fenêtre. Une lecture d'Aqoona est lancée."
+  options:
+    - code: A
+      libelle: Contrôler la portée seulement pour les sociétés dont une crèche a une ligne Aqoona avec un NIR de clé juste
+      cout: leger
+      ouvre: []
+      resultat: "Alpha n'est pas interrogée : aucune anomalie. L'anomalie n'apparaîtra qu'à la lecture d'Aqoona qui suit l'arrivée d'une ligne avec NIR chez Alpha."
+      test: { route: "GET /sources/aqoona/anomalies", entree: "pilote fake, Alpha dans nirScopeMissing, aucune ligne Aqoona avec NIR pour ses crèches, lecture d'Aqoona", attendu: "200, aucune anomalie « Rapprochement par NIR indisponible » pour le SIRET d'Alpha" }
+    - code: B
+      libelle: Contrôler la portée de toutes les clés à chaque lecture d'Aqoona, même sans ligne avec NIR
+      cout: lourd
+      ouvre: [une introspection par clé (jusqu'à 100) à chaque lecture d'Aqoona, anomalie pour des sociétés sans aucun créneau Aqoona, lecture d'Aqoona dépendante de la disponibilité du service d'introspection de PayFit]
+      resultat: "Alpha est signalée dès la lecture d'Aqoona suivante, avant que le moindre NIR ne soit en jeu."
+      test: { route: "GET /sources/aqoona/anomalies", entree: "pilote fake, Alpha dans nirScopeMissing, aucune ligne Aqoona avec NIR pour ses crèches, lecture d'Aqoona", attendu: "200, une anomalie « Rapprochement par NIR indisponible » dont le sujet est le SIRET d'Alpha" }
+  defaut: A
+
+- id: Q-EVP-14
+  titre: Où signaler la clé de contrôle fausse d'un NIR côté PayFit
+  regles: [rule-evp-nir-key-payfit-anomaly-source]
+  effet_recette: oui
+  decideur: proprietaire
+  observable: oui
+  situation: "Une collaboratrice de la société Alpha porte dans PayFit un NIR dont la clé de contrôle est fausse. Une ligne Aqoona d'une autre salariée des crèches d'Alpha porte un NIR de clé juste. Une lecture de PayFit puis une lecture d'Aqoona sont lancées."
+  options:
+    - code: A
+      libelle: Contrôler les NIR de PayFit pendant la lecture d'Aqoona, pour les seules sociétés dont les NIR y sont lus, et signaler sur la source Aqoona
+      cout: leger
+      ouvre: []
+      resultat: "L'anomalie « Clé de NIR PayFit incorrecte » (nom de la collaboratrice, société) est dans les anomalies d'Aqoona. La lecture PayFit ne lit toujours aucun NIR, donc rien ne se signale pour une société sans ligne Aqoona avec NIR."
+      test: { route: "GET /sources/aqoona/anomalies", entree: "pilote fake, une collaboratrice d'Alpha avec NIR à clé fausse dans payfit.json, une ligne Aqoona d'une autre salariée avec NIR de clé juste, lectures PayFit puis Aqoona", attendu: "200, une anomalie « Clé de NIR PayFit incorrecte » ; GET /sources/payfit/anomalies n'en contient aucune" }
+    - code: B
+      libelle: Faire lire et contrôler les NIR aussi par la lecture PayFit, pour toutes les sociétés, et signaler sur la source PayFit
+      cout: lourd
+      ouvre: [la lecture PayFit lit le NIR de toutes les collaboratrices (portée requise, donnée personnelle manipulée plus largement), anomalie de portée aussi sur la source PayFit, règle rule-evp-aqoona-nir-lazy à rouvrir, risque de doublon d'anomalie avec la source Aqoona]
+      resultat: "L'anomalie « Clé de NIR PayFit incorrecte » est dans les anomalies de PayFit pour toute société lisible, même sans ligne Aqoona avec NIR ; le NIR n'est toujours pas conservé."
+      test: { route: "GET /sources/payfit/anomalies", entree: "pilote fake, une collaboratrice d'Alpha avec NIR à clé fausse dans payfit.json, une ligne Aqoona d'une autre salariée avec NIR de clé juste, lectures PayFit puis Aqoona", attendu: "200, une anomalie « Clé de NIR PayFit incorrecte » ; GET /sources/aqoona/anomalies n'en contient aucune" }
+  defaut: A
+
+- id: Q-EVP-15
+  titre: Créneaux Aqoona sans société identifiée dans le taux de rattachement
+  regles: [rule-evp-matching-rates-no-company]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "Aqoona a livré deux créneaux : l'un d'un établissement qui ne correspond à aucune crèche du référentiel, l'autre rattaché par NIR à une collaboratrice de la société Alpha. L'écran Sources affiche les taux de rattachement."
+  options:
+    - code: A
+      libelle: Ajouter une ligne « Sans société identifiée » pour que le tableau compte tous les créneaux lus
+      cout: leger
+      ouvre: []
+      resultat: "Le tableau montre Alpha (1 créneau, 100 % par NIR) et « Sans société identifiée » (1 créneau, 100 % non rattachés) ; le total des lignes égale « Plannings lus »."
+      test: { route: "GET /sources/aqoona/matching-rates", entree: "deux créneaux : établissement inconnu ; ligne rattachée par NIR à Alpha ; lecture d'Aqoona", attendu: "200, items contient la ligne d'Alpha (total 1, byNir.count 1) et une ligne companyId nul « Sans société identifiée » (total 1, unmatched.count 1)" }
+    - code: B
+      libelle: Ne lister que les sociétés, sans ligne pour les créneaux sans société
+      cout: leger
+      ouvre: [un créneau sans société n'apparaît nulle part dans le tableau, écart entre la somme des lignes et « Plannings lus »]
+      resultat: "Le tableau ne montre qu'Alpha (1 créneau, 100 % par NIR) ; le créneau d'établissement inconnu n'est visible que dans l'anomalie « Planning non rattaché »."
+      test: { route: "GET /sources/aqoona/matching-rates", entree: "deux créneaux : établissement inconnu ; ligne rattachée par NIR à Alpha ; lecture d'Aqoona", attendu: "200, items ne contient que la ligne d'Alpha (total 1, byNir.count 1)" }
+  defaut: A
+
+- id: Q-EVP-16
+  titre: Taux de rattachement quand des créneaux d'avant la v4 n'ont pas de mode connu
+  regles: [rule-evp-matching-rates-unknown-mode]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "Aqoona a été lue avec succès, mais une de ses adresses est en échec : ses créneaux, conservés d'avant la v4, n'ont pas de mode de rattachement connu. Les autres créneaux sont rattachés par NIR ou par noms. L'écran Sources demande les taux."
+  options:
+    - code: A
+      libelle: Ne montrer aucun taux tant qu'un créneau a un mode inconnu
+      cout: leger
+      ouvre: []
+      resultat: "L'écran dit que les taux seront disponibles après la prochaine lecture complète ; aucun chiffre partiel n'est montré."
+      test: { route: "GET /sources/aqoona/matching-rates", entree: "un créneau au mode inconnu posé en SQL, d'autres créneaux au mode NIR ou NOM", attendu: "200, available false, items vide" }
+    - code: B
+      libelle: Montrer les taux des créneaux au mode connu et compter à part ceux au mode inconnu
+      cout: lourd
+      ouvre: [une quatrième part « mode inconnu » dans la réponse et le tableau, somme des totaux à réconcilier avec « Plannings lus », changement de la forme de la réponse]
+      resultat: "Le tableau s'affiche, les créneaux anciens étant comptés dans une part « à déterminer »."
+      test: { route: "GET /sources/aqoona/matching-rates", entree: "un créneau au mode inconnu posé en SQL, d'autres créneaux au mode NIR ou NOM", attendu: "200, available true, items non vide, une part supplémentaire pour le mode inconnu" }
+  defaut: A
+
+- id: Q-EVP-17
+  titre: Anomalie de clé de NIR fausse pour une ligne Aqoona sans crèche identifiée
+  regles: [rule-evp-nir-key-anomaly-without-company]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "Une ligne Aqoona porte un NIR de clé fausse, et son établissement ne correspond à aucune crèche du référentiel. Une lecture d'Aqoona est lancée."
+  options:
+    - code: A
+      libelle: Signaler la clé fausse quelle que soit la crèche
+      cout: leger
+      ouvre: []
+      resultat: "Les anomalies d'Aqoona contiennent « Clé de NIR Aqoona incorrecte » pour la personne, en plus de « Planning non rattaché »."
+      test: { route: "GET /sources/aqoona/anomalies", entree: "ligne Aqoona avec NIR de clé fausse, établissement inconnu du référentiel, lecture d'Aqoona", attendu: "200, une anomalie « Clé de NIR Aqoona incorrecte » pour la personne et une « Planning non rattaché »" }
+    - code: B
+      libelle: Ne signaler la clé fausse que si la crèche est identifiée
+      cout: leger
+      ouvre: [une clé fausse reste invisible tant que l'établissement n'est pas rattaché au référentiel]
+      resultat: "Seule « Planning non rattaché » est affichée pour cette ligne."
+      test: { route: "GET /sources/aqoona/anomalies", entree: "ligne Aqoona avec NIR de clé fausse, établissement inconnu du référentiel, lecture d'Aqoona", attendu: "200, une anomalie « Planning non rattaché », aucune « Clé de NIR Aqoona incorrecte »" }
+  defaut: A

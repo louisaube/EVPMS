@@ -1,0 +1,33 @@
+# Demande à l'API : corriger l'adresse d'un accès et délier son compte Google
+
+Écran demandeur : Accès (`/acces`). Besoin : que la personne qui gère l'accès puisse (1) mettre à jour l'adresse de l'accès quand l'adresse du compte Google de la personne a changé, (2) délier l'accès de son ancien compte Google quand ce compte a été recréé, (3) voir si un accès est lié à un compte Google, sans jamais lire l'identifiant Google.
+
+## Opérations
+| Méthode et chemin | Action déclarée | Rôles | Entrée (bornes comprises) | Réponses (codes et formes) |
+|---|---|---|---|---|
+| `GET /access-accounts` | `access:list` (inchangé) | `user`, capacité `access:manage:ro` (inchangé) | inchangée | `200 { items, total }` ; chaque élément gagne `googleLinked: boolean` (obligatoire). Ni `sub`, ni empreinte, ni date de liaison |
+| `PATCH /access-accounts/{id}` | `access:update` (inchangé) | inchangé | corps strict inchangé, plus `email` facultatif : chaîne ≤ 254, adresse valide ; l'adresse envoyée est comparée sans tenir compte de la casse | inchangé, plus : `409 access.email_already_exists` (adresse déjà portée par un autre accès, retiré compris), `422 access.invalid_domain` (hors `@micro-stars.fr`). `200` renvoie l'accès avec la nouvelle adresse |
+| `POST /access-accounts/{id}/unlink-google` | `access:unlink-google` | `user`, capacité `access:manage:ro` pour une RO, `access:manage:directrice` pour une directrice (mêmes règles que `PATCH`) | `id` : UUID ; corps vide | `200` l'accès (`AccessAccountDto`, `googleLinked: false`) ; `401` ; `403 access.privileged_account` ; `403 access.role_not_manageable` ; `404 access.not_found` ; `409 access.google_not_linked` (aucune liaison à lever) |
+
+L'identifiant `access.not_found` et les autres codes `access.*` sont ceux déjà en usage sur `PATCH` ; `access.google_not_linked` est le seul code nouveau.
+
+## Règles
+- `rule-evp-access-address-edit` (user) : quand l'adresse du compte Google d'une personne a changé (même identifiant Google), la personne qui gère l'accès met à jour l'adresse de l'accès par `PATCH /access-accounts/{id}` ; la modification est refusée si l'adresse n'est pas du domaine Workspace (`rule-evp-access-domain`) ou déjà portée par un autre accès.
+- `rule-evp-access-address-keeps-link` (inferred) : changer l'adresse conserve la liaison Google, les crèches, le rôle et l'état actif ; l'adresse de connexion du compte de plateforme (`base.users`) suit celle de l'accès, dans la même transaction ; les groupes techniques `evp:<code>` ne changent pas.
+- `rule-evp-access-address-audited` (inferred) : la modification est tracée (« Modification d'un accès », objet « Accès »), sans l'ancienne ni la nouvelle adresse dans le résumé, conformément à `rule-evp-access-audited` ; envoyer l'adresse actuelle seule ne change rien et n'écrit rien de plus que les autres champs.
+- `rule-evp-access-google-unlink` (user) : quand le compte Google a été recréé (même adresse, autre identifiant Google, décision D-0008), la personne qui gère l'accès délie l'accès de son ancien compte Google ; `google_sub` redevient nul.
+- `rule-evp-access-google-rebind` (user) : après l'action, la connexion valide suivante de cette adresse relie le nouveau compte Google (`rule-evp-google-sub-binding`) ; aucune autre liaison n'est créée par l'action.
+- `rule-evp-access-unlink-who` (user) : mêmes personnes que pour la gestion de l'accès : RH et administratrice pour une RO, superadmin pour une RO ou une directrice (Marine et Justine pour les RO, Louis pour tous).
+- `rule-evp-access-google-linked-visible` (inferred) : `googleLinked` est vrai si et seulement si `evp_accounts.google_sub` est non nul ; la valeur de `google_sub` ne sort jamais de l'API (`rule-evp-secrets-never-exposed`).
+- `rule-evp-access-unlink-needs-link` (inferred) : délier un accès qui n'est pas lié répond `409 access.google_not_linked` sans rien écrire ni tracer.
+- `rule-evp-access-unlink-audited` (inferred) : chaque déliement est tracé (objet « Accès », résumé « Liaison Google levée »), sans `sub` ni adresse, dans la même transaction que la modification (`rule-evp-audit-atomic`).
+- `rule-evp-access-privileged-google-fix` (inferred, decision D-0012) : les comptes privilégiés (RH, administratrice, superadmin) ne sont ni listés, ni modifiables, ni déliables par ces routes (`403 access.privileged_account`), y compris par le superadmin ; leur déblocage se fait hors application. Le superadmin ne délie pas non plus son propre accès.
+- `rule-evp-access-unlink-session` (inferred, decision D-0011) : délier coupe les sessions déjà ouvertes de l'accès au moment du déliement : la requête suivante portant une session ouverte avant le déliement est refusée `401 security.invalid_token` ; la personne se reconnecte, et la connexion suivante relie son compte Google actuel (`rule-evp-access-google-rebind`). Seul le déliement coupe les sessions : un changement d'adresse (`rule-evp-access-address-keeps-link`), un retrait ou une désactivation gardent le comportement actuel. Un déliement refusé (`403`, `404`, `409`) ne coupe rien. Mécanisme : une version de session par compte (`rule-evp-access-session-version`, inferred, backend, voir le plan du module).
+- `rule-evp-access-no-privileged`, `rule-evp-access-who-manages`, `rule-evp-access-no-self-role`, `rule-evp-access-source-no-resurrect` (user, inchangées) : s'appliquent aussi à la nouvelle adresse et au déliement.
+
+## Compatibilité
+- `GET /access-accounts` : propriété de réponse obligatoire ajoutée (`googleLinked`), non rupturante ; à déclarer sous `allowed:` de `specifications/contract-changes.yaml` si la porte de contrat la signale (`response-required-property-added` ou équivalent).
+- `PATCH /access-accounts/{id}` : propriété de corps facultative ajoutée (`email`), non rupturante (aucune borne n'est ajoutée à une entrée existante).
+- Opération nouvelle `POST /access-accounts/{id}/unlink-google` : absente de `specifications/permissions.yaml` (lecture seule pour la fabrication) ; la fabrication ouvre `OPEN: permissions POST /access-accounts/:id/unlink-google : action access:unlink-google, mêmes rôles que PATCH /access-accounts/:id` dans le `DISPUTES.md` de ce dossier. Même démarche pour `rule-evp-access-address-edit` sur l'entrée `PATCH` si QA exige que les règles de l'entrée listent la nouvelle.
+- Une colonne nouvelle sur `evp_accounts` (version de session, decision D-0011) : voir le plan du module ; aucune valeur n'en sort de l'API. `evp_accounts.google_sub` existe depuis la v2.
+- Une session coupée répond `401 security.invalid_token`, code déjà déclaré pour toute route authentifiée : aucune forme de réponse ne change.

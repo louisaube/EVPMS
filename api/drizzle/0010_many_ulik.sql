@@ -1,0 +1,2 @@
+ALTER TABLE "base"."aqoona_plannings" ADD COLUMN "match_method" text DEFAULT 'INCONNU' NOT NULL;--> statement-breakpoint
+ALTER TABLE "base"."aqoona_plannings" ADD CONSTRAINT "aqoona_plannings_match_method_check" CHECK ("base"."aqoona_plannings"."match_method" in ('NIR', 'NOM', 'AUCUN', 'INCONNU'));

@@ -1,0 +1,157 @@
+# Variantes de l'API de test (propriété de la QA ; lues par scripts/variantes.py).
+#
+# L'API de test est un processus distinct des tests : son environnement est fixé à son démarrage.
+# - `api/.env.test` = variables actives de api/.env.template + l'environnement de la variante `default`, réécrit par la
+#   cuisine : `cd api && NODE_ENV=test bash scripts/server/start.sh` donne la variante par défaut.
+# - Une autre variante est démarrée par la cuisine avec ses variables `env` en plus (elles priment) ; une valeur vide
+#   retire la variable. `generate` crée sur la machine une valeur de test jamais versionnée (rsa-private-key-pem).
+#   `jest_env` est passé aux tests seulement.
+# - Chaque fichier de recette tourne contre la variante dont un motif `files` le désigne, sinon contre `default`.
+#   Les tests lisent l'environnement de l'API sous test dans le fichier désigné par ACCEPTANCE_ENV_FILE.
+# Valeurs de test factices uniquement, jamais une vraie clé.
+default: fake
+
+variants:
+  fake:
+    description: >-
+      Pilote fake des sources (fixtures de la v1) et Google configuré par des identifiants de substitution avec ses adresses
+      officielles ; suites du socle et de la v1 (D-0003, COVERAGE-v2-evp-sources « Effets sur la suite de la v1 »).
+    env:
+      EVP_SOURCES_DRIVER: fake
+      GOOGLE_CLIENT_ID: local-test-double.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET: local-test-double
+      GOOGLE_PUBLIC_ORIGIN: http://localhost:4000
+
+  real:
+    description: >-
+      Lecteurs réels pointés vers les serveurs factices que démarrent les tests de la v2 (COVERAGE-v2-evp-sources,
+      « Interface des doubles de test (v2) ») ; fichiers standard de v2-evp-sources.
+    files:
+      - acceptance-v2-google-sign-in.test.ts
+      - acceptance-v2-sources-*.test.ts
+    env:
+      EVP_SOURCES_DRIVER: real
+      GOOGLE_CLIENT_ID: test-client-id.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET: test-google-client-secret-000999
+      GOOGLE_PUBLIC_ORIGIN: http://localhost:4000
+      GOOGLE_AUTH_URL: http://127.0.0.1:4301/google/auth
+      GOOGLE_TOKEN_URL: http://127.0.0.1:4301/google/token
+      GOOGLE_CERTS_URL: http://127.0.0.1:4301/google/certs
+      SHEETS_BASE_URL: http://127.0.0.1:4302/sheets
+      SHEETS_TOKEN_URL: http://127.0.0.1:4302/sheets-token
+      SHEETS_SPREADSHEET_ID: test-spreadsheet-id
+      SHEETS_CLIENT_EMAIL: evp-reader@test-project.iam.gserviceaccount.com
+      PAYFIT_BASE_URL: http://127.0.0.1:4303
+      PAYFIT_INTROSPECT_URL: http://127.0.0.1:4303/introspect
+      PAYFIT_API_KEYS: '[{"siret":"11111111111111","apiKey":"test-payfit-key-company-a-0001"},{"siret":"22222222222222","apiKey":"test-payfit-key-company-b-0002"}]'
+      PAYFIT_RETRY_DELAY_MS: 200
+      PAYFIT_ABSENCE_TYPES_FILE: acceptance/fixtures/payfit-absence-types.test.json
+      AQOONA_URLS: '[{"label":"Aqoona Alpha","url":"http://127.0.0.1:4311/aqoona/alpha?token=test-aqoona-token-alpha-000111"},{"url":"http://127.0.0.1:4311/aqoona/beta?token=test-aqoona-token-beta-000222"}]'
+      AQOONA_MAPPING_FILE: acceptance/fixtures/aqoona-mapping.test.json
+    generate:
+      SHEETS_PRIVATE_KEY: rsa-private-key-pem
+
+  pros:
+    description: >-
+      v3-evp-acces-contrats-siret : lecteurs réels pointés vers les serveurs factices que démarrent les tests de la v3
+      (Google, PayFit à 40 clés, adresse Aqoona « Pros » unique avec securityCheck, fichier de correspondance au format
+      « Pros » acceptance/fixtures/aqoona-mapping-pros.test.json). Ports propres à cette variante (4401 à 4403, 4411).
+      L'adresse Aqoona configurée porte déjà un dateBegin et un dateEnd périmés (à remplacer par la lecture), un paramètre
+      étranger lang=fr (à conserver tel quel) et le securityCheck (à conserver).
+    files:
+      - acceptance-v3-google-sign-in.test.ts
+      - acceptance-v3-sources-*.test.ts
+    env:
+      EVP_SOURCES_DRIVER: real
+      GOOGLE_CLIENT_ID: test-client-id.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET: test-google-client-secret-000999
+      GOOGLE_PUBLIC_ORIGIN: http://localhost:4000
+      GOOGLE_AUTH_URL: http://127.0.0.1:4401/google/auth
+      GOOGLE_TOKEN_URL: http://127.0.0.1:4401/google/token
+      GOOGLE_CERTS_URL: http://127.0.0.1:4401/google/certs
+      SHEETS_BASE_URL: http://127.0.0.1:4402/sheets
+      SHEETS_TOKEN_URL: http://127.0.0.1:4402/sheets-token
+      SHEETS_SPREADSHEET_ID: test-spreadsheet-id
+      SHEETS_CLIENT_EMAIL: evp-reader@test-project.iam.gserviceaccount.com
+      PAYFIT_BASE_URL: http://127.0.0.1:4403
+      PAYFIT_INTROSPECT_URL: http://127.0.0.1:4403/introspect
+      PAYFIT_API_KEYS: '[{"siret":"11111111111111","apiKey":"test-payfit-key-company-a-0001"},{"siret":"22222222222222","apiKey":"test-payfit-key-company-b-0002"},{"siret":"40000000000001","apiKey":"test-payfit-key-bulk-0001"},{"siret":"40000000000002","apiKey":"test-payfit-key-bulk-0002"},{"siret":"40000000000003","apiKey":"test-payfit-key-bulk-0003"},{"siret":"40000000000004","apiKey":"test-payfit-key-bulk-0004"},{"siret":"40000000000005","apiKey":"test-payfit-key-bulk-0005"},{"siret":"40000000000006","apiKey":"test-payfit-key-bulk-0006"},{"siret":"40000000000007","apiKey":"test-payfit-key-bulk-0007"},{"siret":"40000000000008","apiKey":"test-payfit-key-bulk-0008"},{"siret":"40000000000009","apiKey":"test-payfit-key-bulk-0009"},{"siret":"40000000000010","apiKey":"test-payfit-key-bulk-0010"},{"siret":"40000000000011","apiKey":"test-payfit-key-bulk-0011"},{"siret":"40000000000012","apiKey":"test-payfit-key-bulk-0012"},{"siret":"40000000000013","apiKey":"test-payfit-key-bulk-0013"},{"siret":"40000000000014","apiKey":"test-payfit-key-bulk-0014"},{"siret":"40000000000015","apiKey":"test-payfit-key-bulk-0015"},{"siret":"40000000000016","apiKey":"test-payfit-key-bulk-0016"},{"siret":"40000000000017","apiKey":"test-payfit-key-bulk-0017"},{"siret":"40000000000018","apiKey":"test-payfit-key-bulk-0018"},{"siret":"40000000000019","apiKey":"test-payfit-key-bulk-0019"},{"siret":"40000000000020","apiKey":"test-payfit-key-bulk-0020"},{"siret":"40000000000021","apiKey":"test-payfit-key-bulk-0021"},{"siret":"40000000000022","apiKey":"test-payfit-key-bulk-0022"},{"siret":"40000000000023","apiKey":"test-payfit-key-bulk-0023"},{"siret":"40000000000024","apiKey":"test-payfit-key-bulk-0024"},{"siret":"40000000000025","apiKey":"test-payfit-key-bulk-0025"},{"siret":"40000000000026","apiKey":"test-payfit-key-bulk-0026"},{"siret":"40000000000027","apiKey":"test-payfit-key-bulk-0027"},{"siret":"40000000000028","apiKey":"test-payfit-key-bulk-0028"},{"siret":"40000000000029","apiKey":"test-payfit-key-bulk-0029"},{"siret":"40000000000030","apiKey":"test-payfit-key-bulk-0030"},{"siret":"40000000000031","apiKey":"test-payfit-key-bulk-0031"},{"siret":"40000000000032","apiKey":"test-payfit-key-bulk-0032"},{"siret":"40000000000033","apiKey":"test-payfit-key-bulk-0033"},{"siret":"40000000000034","apiKey":"test-payfit-key-bulk-0034"},{"siret":"40000000000035","apiKey":"test-payfit-key-bulk-0035"},{"siret":"40000000000036","apiKey":"test-payfit-key-bulk-0036"},{"siret":"40000000000037","apiKey":"test-payfit-key-bulk-0037"},{"siret":"40000000000038","apiKey":"test-payfit-key-bulk-0038"}]'
+      PAYFIT_RETRY_DELAY_MS: 200
+      PAYFIT_ABSENCE_TYPES_FILE: acceptance/fixtures/payfit-absence-types.test.json
+      AQOONA_URLS: '[{"label":"Aqoona Pros","url":"http://127.0.0.1:4411/aqoona/generateMicrostarsPlanningPros.php?dateBegin=2000-01-01&securityCheck=test-security-check-pros-000333&lang=fr&dateEnd=1999-12-31"}]'
+      AQOONA_MAPPING_FILE: acceptance/fixtures/aqoona-mapping-pros.test.json
+    generate:
+      SHEETS_PRIVATE_KEY: rsa-private-key-pem
+
+  nir:
+    description: >-
+      v4-evp-fiabilite-nir : lecteurs réels pointés vers les serveurs factices que démarrent les tests de la v4 (PayFit à
+      deux clés, dont l'introspection porte le champ `scope` ; adresse Aqoona « Pros » unique, fichier de correspondance
+      acceptance/fixtures/aqoona-mapping-pros.test.json). Ports propres à cette variante (4501 à 4503, 4511). Aucune
+      variable à écrire par les développeurs dans api/.env.test.
+    files:
+      - acceptance-v4-sources-*.test.ts
+    env:
+      EVP_SOURCES_DRIVER: real
+      GOOGLE_CLIENT_ID: test-client-id.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET: test-google-client-secret-000999
+      GOOGLE_PUBLIC_ORIGIN: http://localhost:4000
+      GOOGLE_AUTH_URL: http://127.0.0.1:4501/google/auth
+      GOOGLE_TOKEN_URL: http://127.0.0.1:4501/google/token
+      GOOGLE_CERTS_URL: http://127.0.0.1:4501/google/certs
+      SHEETS_BASE_URL: http://127.0.0.1:4502/sheets
+      SHEETS_TOKEN_URL: http://127.0.0.1:4502/sheets-token
+      SHEETS_SPREADSHEET_ID: test-spreadsheet-id
+      SHEETS_CLIENT_EMAIL: evp-reader@test-project.iam.gserviceaccount.com
+      PAYFIT_BASE_URL: http://127.0.0.1:4503
+      PAYFIT_INTROSPECT_URL: http://127.0.0.1:4503/introspect
+      PAYFIT_API_KEYS: '[{"siret":"11111111111111","apiKey":"test-payfit-key-nir-a-0001"},{"siret":"22222222222222","apiKey":"test-payfit-key-nir-b-0002"}]'
+      PAYFIT_RETRY_DELAY_MS: 200
+      PAYFIT_ABSENCE_TYPES_FILE: acceptance/fixtures/payfit-absence-types.test.json
+      AQOONA_URLS: '[{"label":"Aqoona Pros","url":"http://127.0.0.1:4511/aqoona/generateMicrostarsPlanningPros.php?dateBegin=2000-01-01&securityCheck=test-security-check-nir-000444&lang=fr&dateEnd=1999-12-31"}]'
+      AQOONA_MAPPING_FILE: acceptance/fixtures/aqoona-mapping-pros.test.json
+    generate:
+      SHEETS_PRIVATE_KEY: rsa-private-key-pem
+
+  network:
+    description: >-
+      v5-evp-rattachement-nir : lecteurs réels pointés vers les serveurs factices que démarrent les tests de la v5 (PayFit à
+      deux clés, dont l'introspection est refaite à chaque lecture et porte le champ `scope` ; adresse Aqoona « Pros » unique,
+      fichier de correspondance acceptance/fixtures/aqoona-mapping-pros.test.json). Ports propres à cette variante (4601 à 4603,
+      4611) et clés propres, pour ne rien partager avec les variantes `pros` et `nir`. Aucune variable à écrire par les développeurs
+      dans api/.env.test.
+    files:
+      - acceptance-v5-sources-*.test.ts
+    env:
+      EVP_SOURCES_DRIVER: real
+      GOOGLE_CLIENT_ID: test-client-id.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET: test-google-client-secret-000999
+      GOOGLE_PUBLIC_ORIGIN: http://localhost:4000
+      GOOGLE_AUTH_URL: http://127.0.0.1:4601/google/auth
+      GOOGLE_TOKEN_URL: http://127.0.0.1:4601/google/token
+      GOOGLE_CERTS_URL: http://127.0.0.1:4601/google/certs
+      SHEETS_BASE_URL: http://127.0.0.1:4602/sheets
+      SHEETS_TOKEN_URL: http://127.0.0.1:4602/sheets-token
+      SHEETS_SPREADSHEET_ID: test-spreadsheet-id
+      SHEETS_CLIENT_EMAIL: evp-reader@test-project.iam.gserviceaccount.com
+      PAYFIT_BASE_URL: http://127.0.0.1:4603
+      PAYFIT_INTROSPECT_URL: http://127.0.0.1:4603/introspect
+      PAYFIT_API_KEYS: '[{"siret":"11111111111111","apiKey":"test-payfit-key-net-a-0001"},{"siret":"22222222222222","apiKey":"test-payfit-key-net-b-0002"}]'
+      PAYFIT_RETRY_DELAY_MS: 200
+      PAYFIT_ABSENCE_TYPES_FILE: acceptance/fixtures/payfit-absence-types.test.json
+      AQOONA_URLS: '[{"label":"Aqoona Pros","url":"http://127.0.0.1:4611/aqoona/generateMicrostarsPlanningPros.php?dateBegin=2000-01-01&securityCheck=test-security-check-net-000555&lang=fr&dateEnd=1999-12-31"}]'
+      AQOONA_MAPPING_FILE: acceptance/fixtures/aqoona-mapping-pros.test.json
+    generate:
+      SHEETS_PRIVATE_KEY: rsa-private-key-pem
+
+  unconfigured:
+    description: >-
+      Lecteurs réels sans secret Google ni configuration des sources : google_not_configured, 503 de start, état
+      UNAVAILABLE et sources.not_configured sans repli sur les fixtures (D-0003).
+    files:
+      - acceptance-v2-unconfigured.test.ts
+    env:
+      EVP_SOURCES_DRIVER: real
+      GOOGLE_CLIENT_SECRET: ''
+    jest_env:
+      ACCEPTANCE_VARIANT: unconfigured

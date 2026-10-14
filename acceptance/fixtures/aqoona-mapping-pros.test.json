@@ -1,0 +1,20 @@
+{
+  "records": "",
+  "fields": {
+    "matricule": "user_matricule",
+    "prenom": "user_firstname",
+    "nom": "user_lastname",
+    "creche": "etablissement_name",
+    "jour": "planning_days_date",
+    "debut": "planning_days_heure_debut",
+    "fin": "planning_days_heure_fin",
+    "type": "planning_days_type_creneau"
+  },
+  "dayFormat": "YYYY-MM-DD",
+  "timeFormat": "HH:mm",
+  "slotTypes": {
+    "GARDE": ["garde", "garde enfant", "terrain"],
+    "PAUSE": ["pause", "pauses"],
+    "MENAGE": ["menage", "entretien"]
+  }
+}

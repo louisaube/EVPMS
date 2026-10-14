@@ -1,0 +1,9 @@
+{
+  "name": "evpms",
+  "private": true,
+  "description": "Application fabriquée par Cuisine sauvage",
+  "scripts": {
+    "acceptance": "bash scripts/acceptance.sh",
+    "api-client:generate": "pnpm --dir packages/api-client generate"
+  }
+}

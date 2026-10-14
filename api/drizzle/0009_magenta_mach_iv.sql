@@ -1,0 +1,5 @@
+ALTER TABLE "base"."evp_accounts" ADD COLUMN "session_version" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
+ALTER TABLE "base"."aqoona_plannings" ADD COLUMN "slot_type" text DEFAULT 'NON_PRECISE' NOT NULL;--> statement-breakpoint
+DELETE FROM "base"."aqoona_plannings" a USING "base"."aqoona_plannings" b WHERE a.ctid > b.ctid AND a."person_ref" = b."person_ref" AND a."creche_code" IS NOT DISTINCT FROM b."creche_code" AND a."company_id" IS NOT DISTINCT FROM b."company_id" AND a."day" = b."day" AND a."start_time" = b."start_time" AND a."end_time" = b."end_time" AND a."slot_type" = b."slot_type";--> statement-breakpoint
+ALTER TABLE "base"."aqoona_plannings" ADD CONSTRAINT "aqoona_plannings_slot_unique" UNIQUE NULLS NOT DISTINCT("person_ref","creche_code","company_id","day","start_time","end_time","slot_type");--> statement-breakpoint
+ALTER TABLE "base"."aqoona_plannings" ADD CONSTRAINT "aqoona_plannings_slot_type_check" CHECK ("base"."aqoona_plannings"."slot_type" in ('GARDE', 'PAUSE', 'MENAGE', 'AUTRE', 'NON_PRECISE'));

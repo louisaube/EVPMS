@@ -1,0 +1,534 @@
+# Expected permission matrix of the operations (owned by the QA agent and the human).
+# Foundation routes that did not change (auth, health, POST /users) stay in .cuisine/permissions-foundation.yaml.
+# Version socle-groupes-perimetres: GET /users and GET /users/:id are arbitrated here (they were
+# `to-arbitrate` in the frozen foundation matrix); PATCH /users/:id, /scopes and /groups are new.
+roles: [anonymous, user, admin]
+operations:
+  - method: GET
+    path: /users
+    action: users:list
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-users-list-admin-only]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /users/:id
+    action: users:get
+    # `allow` lists the roles admitted on ANY id, which is what the probe observes (it calls the route
+    # with an id that is nobody's). An ordinary user is admitted only on their own id (ownership: own,
+    # rule-foundation-users-get-self-or-admin, covered by cross_owner_tests); on any other id they get 403.
+    # The ownership check must therefore be a business guard (@UseGuards), so that the observed
+    # matrix prevails over the decorator roles.
+    allow: [admin]
+    ownership: own
+    rules: [rule-foundation-users-get-self-or-admin]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-foundation-users-get-self-or-admin] an ordinary user cannot read another existing account: 403"
+      - "[rule-foundation-users-get-self-or-admin] an ordinary user cannot read an admin account: 403"
+      - "[rule-foundation-users-get-self-or-admin] an ordinary user gets the same 403 for an unknown UUID and for a malformed id"
+  - method: PATCH
+    path: /users/:id
+    action: users:update
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-users-admin-screen, rule-foundation-user-groups-membership, rule-foundation-user-edit-scope, rule-foundation-user-own-role-locked]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /scopes
+    action: scopes:list
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-scopes-admin-screen, rule-foundation-scope-definition]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /scopes
+    action: scopes:create
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-scopes-admin-screen, rule-foundation-scope-code-unique, rule-foundation-scope-code-format]
+    provenance: user
+    cross_owner_tests: []
+  - method: PATCH
+    path: /scopes/:id
+    action: scopes:update
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-scopes-admin-screen, rule-foundation-scope-code-immutable]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /groups
+    action: groups:list
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-groups-admin-screen, rule-foundation-group-definition]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /groups
+    action: groups:create
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-groups-admin-screen, rule-foundation-group-needs-scope, rule-foundation-group-members-optional, rule-foundation-group-name-unique]
+    provenance: user
+    cross_owner_tests: []
+  - method: PATCH
+    path: /groups/:id
+    action: groups:update
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-groups-admin-screen, rule-foundation-group-definition, rule-foundation-group-needs-scope, rule-foundation-group-name-unique]
+    provenance: user
+    cross_owner_tests: []
+  # Version socle-journal-audit: the journal is read-only (no POST/PUT/PATCH/DELETE under /audit-logs,
+  # rule-foundation-audit-immutable) and reserved to administrators. The six traced routes keep their permissions.
+  - method: GET
+    path: /audit-logs
+    action: audit:list
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-audit-admin-only, rule-foundation-audit-filters, rule-foundation-audit-trace-content]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /audit-logs/filters
+    action: audit:filters
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-audit-admin-only, rule-foundation-audit-filter-options-from-journal]
+    provenance: user
+    cross_owner_tests: []
+  # Version socle-import-excel: import of accounts (generic mechanism of the foundation applied to users).
+  # The four routes are reserved to administrators. A preview is private to the administrator who created
+  # it (rule-foundation-import-preview-owner): errors and confirm are `ownership: own`, another administrator
+  # gets the same 404 as for an unknown id. The probe calls the routes without body: guards answer 401/403 first.
+  - method: GET
+    path: /users/imports/specification
+    action: users:import-specification
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-import-users-admin-only, rule-foundation-import-users-columns, rule-foundation-import-formats]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /users/imports/preview
+    action: users:import-preview
+    allow: [admin]
+    ownership: none
+    rules: [rule-foundation-import-users-admin-only, rule-foundation-import-two-steps, rule-foundation-import-preview-content, rule-foundation-import-trapped-files-refused]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /users/imports/:importId/errors
+    action: users:import-errors
+    allow: [admin]
+    ownership: own
+    rules: [rule-foundation-import-users-admin-only, rule-foundation-import-preview-content, rule-foundation-import-preview-owner]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-foundation-import-preview-owner] another administrator listing the errors of a preview gets the same 404 import.preview_not_found as for an unknown id"
+  - method: POST
+    path: /users/imports/:importId/confirm
+    action: users:import-confirm
+    allow: [admin]
+    ownership: own
+    rules: [rule-foundation-import-users-admin-only, rule-foundation-import-confirm-valid-only, rule-foundation-import-audited, rule-foundation-import-no-double, rule-foundation-import-preview-owner]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-foundation-import-preview-owner] another administrator confirming a preview gets the same 404 import.preview_not_found as for an unknown id and nothing is created"
+
+  # ---------------------------------------------------------------------------------------------
+  # Version v1-evp (EVP, préparation et suivi des absences).
+  # The permissions checker probes with NON-EVP socle accounts (user, admin). Every route gated by an
+  # EVP capability therefore answers 403 to both, hence `allow: []`; the role-by-role matrix (directrice,
+  # RO, RH, ADMINISTRATRICE, SUPERADMIN) is proved by acceptance/acceptance-evp-roles-contract.test.ts.
+  # `ownership: own` marks the routes whose result depends on the crèche perimeter of the caller.
+  # ---------------------------------------------------------------------------------------------
+  # Version v2-evp-sources: no operation is added or removed (decision D-0005, option A of Q-EVP-01: server flow with
+  # authorisation code; POST /google-sign-in/credential does not exist). The access (method, path, action, allow,
+  # ownership) of every operation below is unchanged; the entries of the Google sign-in and of the sources only gain
+  # the rules of v2 that they now carry. GET /sources changes its response (lastError, addresses, state PARTIAL).
+  - method: GET
+    path: /service-status
+    action: null
+    allow: [anonymous, user, admin]
+    ownership: none
+    rules: [rule-evp-login-service-status, rule-evp-login-public-no-hr-data, rule-evp-google-endpoints-configurable]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /google-sign-in/start
+    action: null
+    allow: [anonymous, user, admin]
+    ownership: none
+    rules: [rule-evp-login-google-only, rule-evp-login-safe-redirect, rule-evp-google-flow-redirect, rule-evp-google-endpoints-configurable, rule-evp-google-domain-configurable, rule-evp-google-scopes-minimal]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /google-sign-in/callback
+    action: null
+    allow: [anonymous, user, admin]
+    ownership: none
+    # Version v3-evp-acces-contrats-siret: rule-evp-google-sub-email-change (v2: the session opened) is replaced by
+    # rule-evp-google-sub-email-mismatch (no session, erreur=adresse_modifiee) and rule-evp-google-sub-recreated
+    # (erreur=compte_recree); access, method, path and action are unchanged.
+    rules: [rule-evp-login-google-only, rule-evp-login-domain-not-enough, rule-evp-login-single-denial, rule-evp-login-safe-redirect, rule-evp-google-token-verified-server, rule-evp-google-signature, rule-evp-google-certs-cache, rule-evp-google-certs-rotation, rule-evp-google-certs-fail-closed, rule-evp-google-aud, rule-evp-google-iss, rule-evp-google-exp, rule-evp-google-hd, rule-evp-google-email-verified, rule-evp-google-flow-redirect, rule-evp-google-sub-identity, rule-evp-google-sub-binding, rule-evp-google-sub-mismatch, rule-evp-google-sub-email-mismatch, rule-evp-google-sub-recreated, rule-evp-google-sub-address-fix, rule-evp-login-mismatch-admissible-only, rule-evp-login-mismatch-no-address, rule-evp-login-mismatch-no-write, rule-evp-google-sub-unique, rule-evp-google-error-causes, rule-evp-google-sign-in-audit, rule-evp-session-8h, rule-evp-secrets-never-exposed]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /profile
+    action: profile:read
+    allow: []
+    ownership: none
+    rules: [rule-evp-capabilities-list, rule-evp-rights-rechecked, rule-evp-no-store]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /settings
+    action: settings:read
+    allow: []
+    ownership: none
+    rules: [rule-evp-settings-no-secret, rule-evp-settings-payfit-disabled, rule-evp-no-store]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /access-accounts
+    action: access:list
+    allow: []
+    ownership: none
+    rules: [rule-evp-access-who-manages, rule-evp-access-list-scope, rule-evp-access-pagination, rule-evp-access-google-linked-visible]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /access-accounts
+    action: access:create
+    allow: []
+    ownership: none
+    rules: [rule-evp-access-who-manages, rule-evp-access-admin, rule-evp-access-active-needs-creche, rule-evp-access-no-privileged, rule-evp-access-audited]
+    provenance: user
+    cross_owner_tests: []
+  - method: PATCH
+    path: /access-accounts/:id
+    action: access:update
+    allow: []
+    ownership: none
+    rules: [rule-evp-access-who-manages, rule-evp-access-admin, rule-evp-access-no-self-role, rule-evp-access-no-privileged, rule-evp-access-directrice-source, rule-evp-access-audited, rule-evp-access-address-edit, rule-evp-access-address-keeps-link, rule-evp-access-address-audited, rule-evp-access-email-lock-order, rule-evp-access-privileged-google-fix]
+    provenance: user
+    cross_owner_tests: []
+  # Version v3-evp-acces-contrats-siret: new operation. Same capabilities and same `manageable(caller)` as PATCH
+  # (RH and ADMINISTRATRICE for a RO, SUPERADMIN for a RO or a directrice); the permissions checker probes with non-EVP
+  # socle accounts, hence `allow: []`, the role-by-role matrix being proved by acceptance-v3-access.test.ts.
+  - method: POST
+    path: /access-accounts/:id/unlink-google
+    action: access:unlink-google
+    allow: []
+    ownership: none
+    rules: [rule-evp-access-google-unlink, rule-evp-access-google-rebind, rule-evp-access-unlink-who, rule-evp-access-unlink-needs-link, rule-evp-access-unlink-audited, rule-evp-access-unlink-session, rule-evp-access-privileged-google-fix, rule-evp-access-no-privileged, rule-evp-access-who-manages]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /access-accounts/:id/remove
+    action: access:remove
+    allow: []
+    ownership: none
+    rules: [rule-evp-access-who-manages, rule-evp-access-remove-ro, rule-evp-access-no-privileged, rule-evp-access-audited]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /creches
+    action: creches:list
+    allow: []
+    ownership: none
+    rules: [rule-evp-creche-scope, rule-evp-creche-readonly, rule-evp-siret-shared-creches]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /creches/:code/contracts
+    action: creches:contracts
+    allow: []
+    ownership: own
+    rules: [rule-evp-creche-scope, rule-evp-creche-link-siret, rule-evp-declare-employee-key, rule-evp-declare-contracts-not-archived, rule-evp-declare-contracts-status, rule-evp-declare-contracts-list-only, rule-evp-siret-shared-creches, rule-evp-siret-one-company, rule-evp-siret-shared-contracts, rule-evp-siret-shared-contracts-visible, rule-evp-siret-shared-contracts-flag]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-creche-scope] a crèche outside the perimeter answers 404, the same as an unknown crèche"
+      - "[rule-evp-siret-shared-contracts] the route keeps its guards: 401 anonymous, 403 ADMINISTRATRICE, 404 for a crèche outside the perimeter or unknown (same answer)"
+  - method: GET
+    path: /creches/:code/closures
+    action: closures:list
+    allow: []
+    ownership: own
+    rules: [rule-evp-creche-scope, rule-evp-closure-payroll-month]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-creche-scope] a crèche outside the perimeter answers 404, the same as an unknown one; global roles read any crèche"
+  - method: POST
+    path: /creches/:code/closures/:month
+    action: closures:attest
+    allow: []
+    ownership: own
+    rules: [rule-evp-creche-scope, rule-evp-closure-attest, rule-evp-closure-open-blocks, rule-evp-closure-api-roles, rule-evp-closure-audited, rule-evp-closure-no-reopen, rule-evp-closure-month-bounds]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-creche-scope] a crèche outside the perimeter answers 404 and writes nothing, the same as an unknown crèche"
+  - method: GET
+    path: /absence-types
+    action: absences:types
+    allow: []
+    ownership: none
+    rules: [rule-evp-declare-types-defaults]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /todo
+    action: todo:read
+    allow: []
+    ownership: own
+    rules: [rule-evp-todo-counter-definition, rule-evp-todo-priority-order, rule-evp-list-scope]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-todo-counter-definition] [rule-evp-list-scope] counters and priority dossiers follow the perimeter of the caller"
+  - method: GET
+    path: /absences
+    action: absences:list
+    allow: []
+    ownership: own
+    rules: [rule-evp-list-scope, rule-evp-list-max-200]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-list-scope] a directrice and a RO see only their crèche; global roles see all"
+  - method: GET
+    path: /absences/:id
+    action: absences:get
+    allow: []
+    ownership: own
+    rules: [rule-evp-list-scope, rule-evp-detail-actions-from-api, rule-evp-detail-private-piece]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-list-scope] a dossier outside the perimeter answers 404 repository.not_found, byte for byte the same as an unknown one"
+  - method: GET
+    path: /absences/:id/audit
+    action: absences:audit
+    allow: []
+    ownership: none
+    rules: [rule-evp-audit-atomic, rule-evp-list-scope]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /absences
+    action: absences:create
+    allow: []
+    ownership: none
+    rules: [rule-evp-declare-steps, rule-evp-declare-checks, rule-evp-declare-roles, rule-evp-declare-duplicate, rule-evp-declare-overlap-blocks, rule-evp-declare-max-pieces, rule-evp-declare-comment-bound]
+    provenance: user
+    cross_owner_tests: []
+  - method: PATCH
+    path: /absences/:id
+    action: absences:update
+    allow: []
+    ownership: own
+    rules: [rule-evp-declare-edit-server, rule-evp-declare-roles, rule-evp-declare-checks]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-declare-roles] ADMINISTRATRICE gets 403; another crèche’s declarant 404 (as unknown); anonymous 401; RO, RH and SUPERADMIN can edit"
+  - method: POST
+    path: /absences/:id/submit
+    action: absences:submit
+    allow: []
+    ownership: own
+    rules: [rule-evp-declare-roles, rule-evp-decision-states, rule-evp-declare-no-auto-anticipation]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-declare-roles] RO, RH and SUPERADMIN can submit in their perimeter; ADMINISTRATRICE 403; another crèche’s directrice 404; anonymous 401"
+  - method: POST
+    path: /absences/validate-batch
+    action: absences:validate-batch
+    allow: []
+    ownership: none
+    rules: [rule-evp-decision-marine-only, rule-evp-batch-individual-controls, rule-evp-batch-max-50, rule-evp-batch-validate-rh-only]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /absences/:id/validate
+    action: absences:validate
+    allow: []
+    ownership: none
+    rules: [rule-evp-decision-marine-only, rule-evp-decision-states, rule-evp-decision-replay-controls, rule-evp-validated-is-to-enter]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /absences/:id/return
+    action: absences:return
+    allow: []
+    ownership: none
+    rules: [rule-evp-decision-marine-only, rule-evp-decision-states, rule-evp-decision-reason-required, rule-evp-decision-replay-controls]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /absences/:id/reject
+    action: absences:reject
+    allow: []
+    ownership: none
+    rules: [rule-evp-decision-marine-only, rule-evp-decision-states, rule-evp-decision-reason-required, rule-evp-decision-replay-controls]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /absences/:id/cancel
+    action: absences:cancel
+    allow: []
+    ownership: own
+    rules: [rule-evp-cancel-scope, rule-evp-list-scope, rule-evp-decision-states]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-cancel-scope] [rule-evp-list-scope] a dossier outside the perimeter is 404 (as an unknown one) and stays untouched; ADMINISTRATRICE 403; anonymous 401"
+  - method: POST
+    path: /absences/:id/mark-entered
+    action: absences:mark-entered
+    allow: []
+    ownership: none
+    rules: [rule-evp-decision-marine-only, rule-evp-mark-entered-no-proof, rule-evp-payfit-no-manual-confirm]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /justificatifs/authorize-upload
+    action: justificatifs:authorize
+    allow: []
+    ownership: own
+    rules: [rule-evp-attach-formats, rule-evp-attach-temp-upload, rule-evp-piece-scope, rule-evp-declare-max-pieces]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-piece-scope] the role and the crèche are checked: ADMINISTRATRICE 403, crèche outside the perimeter 403, anonymous 401, nothing written"
+      - "[rule-evp-piece-scope] a dossier outside the perimeter is 404 (as an unknown dossier)"
+  - method: POST
+    path: /justificatifs/:id/confirm
+    action: justificatifs:confirm
+    allow: []
+    ownership: own
+    rules: [rule-evp-piece-scope, rule-evp-attach-copy-out, rule-evp-attach-attached-on-confirm, rule-evp-attach-single-confirm, rule-evp-attach-no-files-in-db]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-piece-scope] a piece of another crèche cannot be confirmed by a declarant of this crèche: cross-crèche confirmation is refused"
+  - method: POST
+    path: /justificatifs/:id/read-link
+    action: justificatifs:read-link
+    allow: []
+    ownership: own
+    rules: [rule-evp-piece-scope, rule-evp-piece-read-link, rule-evp-piece-open-audited, rule-evp-detail-private-piece]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-piece-scope] a piece of another crèche is 404, byte for byte the same as an unknown piece; anonymous 401; malformed id 400"
+  - method: GET
+    path: /notifications
+    action: notifications:list
+    allow: []
+    ownership: none
+    rules: [rule-evp-notif-list, rule-evp-notif-max-100, rule-evp-notif-scope]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /notifications/unread-count
+    action: notifications:count
+    allow: []
+    ownership: none
+    rules: [rule-evp-notif-per-user-read, rule-evp-notif-scope]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /notifications/:id/read
+    action: notifications:read
+    allow: []
+    ownership: own
+    rules: [rule-evp-notif-scope, rule-evp-notif-per-user-read, rule-evp-notif-read-decides-nothing, rule-evp-notif-read-not-journaled]
+    provenance: user
+    cross_owner_tests:
+      - "[rule-evp-notif-scope] a notification of another crèche is 404, byte for byte the same as an unknown one, and nothing is written"
+  - method: GET
+    path: /journal-entries
+    action: journal:list
+    allow: []
+    ownership: none
+    rules: [rule-evp-journal-readonly, rule-evp-journal-covers, rule-evp-journal-no-medical, rule-evp-journal-pagination]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /journal-entries/filters
+    action: journal:filters
+    allow: []
+    ownership: none
+    rules: [rule-evp-journal-readonly, rule-evp-journal-source]
+    provenance: inferred
+    cross_owner_tests: []
+  - method: POST
+    path: /exports/absences
+    action: exports:absences
+    allow: []
+    ownership: none
+    rules: [rule-evp-export-roles, rule-evp-export-period, rule-evp-export-columns, rule-evp-export-csv-format, rule-evp-export-audited, rule-evp-export-max-span, rule-evp-export-post-for-audit]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /sources
+    action: sources:list
+    allow: []
+    ownership: none
+    rules: [rule-evp-sources-readonly, rule-evp-sources-credentials, rule-evp-sources-failure-state, rule-evp-sources-error-codes, rule-evp-sources-partial-failure, rule-evp-aqoona-url-secret, rule-evp-aqoona-mask, rule-evp-aqoona-nir-transient-key, rule-evp-aqoona-nir-never-stored, rule-evp-aqoona-dedupe, rule-evp-aqoona-window-params, rule-evp-matching-rates-consistency, rule-evp-payfit-scope-every-read, rule-evp-company-named-in-anomalies, rule-evp-secrets-never-exposed]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /sources/:key/refresh
+    action: sources:refresh
+    allow: []
+    ownership: none
+    rules: [rule-evp-sources-manual, rule-evp-sources-sheets-superadmin, rule-evp-sources-refresh-audited, rule-evp-sources-run-single, rule-evp-sources-configurable, rule-evp-sources-readonly, rule-evp-sources-failure-state, rule-evp-sources-partial-failure, rule-evp-sources-timeouts, rule-evp-sources-no-scheduler, rule-evp-sheets-values-get, rule-evp-sheets-service-account, rule-evp-payfit-bearer, rule-evp-payfit-company-id, rule-evp-payfit-pagination, rule-evp-payfit-errors, rule-evp-aqoona-get-only, rule-evp-aqoona-field-mapping, rule-evp-aqoona-read-pros, rule-evp-aqoona-window-params, rule-evp-aqoona-root-array, rule-evp-aqoona-mapping-final, rule-evp-aqoona-slots, rule-evp-aqoona-dedupe, rule-evp-aqoona-text-normalised, rule-evp-aqoona-slot-type-normalised, rule-evp-aqoona-nir-transient-key, rule-evp-aqoona-nir-never-stored, rule-evp-aqoona-nir-lazy, rule-evp-aqoona-nir-unavailable, rule-evp-payfit-many-keys, rule-evp-payfit-scope-checked, rule-evp-payfit-scope-format, rule-evp-payfit-scope-fresh, rule-evp-payfit-scope-read-only, rule-evp-nir-key-formula, rule-evp-nir-key-both-sides, rule-evp-nir-key-invalid-unused, rule-evp-nir-key-never-shown, rule-evp-matching-method-first-row, rule-evp-link-nir-only, rule-evp-link-network-wide, rule-evp-link-one-establishment, rule-evp-link-nir-two-companies, rule-evp-link-unusable-nir, rule-evp-link-incomplete-read, rule-evp-link-network-read, rule-evp-link-employee-not-read, rule-evp-payfit-scope-every-read, rule-evp-payfit-scope-introspection-failed, rule-evp-payfit-scope-no-nir-read, rule-evp-payfit-scope-one-per-key, rule-evp-secrets-never-exposed]
+    provenance: user
+    cross_owner_tests: []
+  - method: POST
+    path: /sources/refresh-all
+    action: sources:refresh-all
+    allow: []
+    ownership: none
+    rules: [rule-evp-sources-manual, rule-evp-sources-sheets-superadmin, rule-evp-sources-refresh-audited, rule-evp-sources-run-single, rule-evp-sources-failure-state, rule-evp-sources-partial-failure]
+    provenance: user
+    cross_owner_tests: []
+  - method: GET
+    path: /sources/runs/:id
+    action: sources:run
+    allow: []
+    ownership: none
+    rules: [rule-evp-sources-run-single, rule-evp-sources-failure-state, rule-evp-sources-error-codes, rule-evp-secrets-never-exposed]
+    provenance: inferred
+    cross_owner_tests: []
+  - method: GET
+    path: /sources/:key/anomalies
+    action: sources:anomalies
+    allow: []
+    ownership: none
+    rules: [rule-evp-sources-no-invention, rule-evp-sources-readonly, rule-evp-sources-partial-failure, rule-evp-payfit-type-unmapped, rule-evp-payfit-half-day-mapping, rule-evp-aqoona-unexpected-format, rule-evp-aqoona-slot-type-anomalies, rule-evp-aqoona-etab-unique, rule-evp-aqoona-nir-ambiguous, rule-evp-aqoona-nir-unavailable, rule-evp-aqoona-nir-no-trace-in-types, rule-evp-payfit-scope-missing-fallback, rule-evp-payfit-scope-detail, rule-evp-payfit-scope-coverage, rule-evp-nir-key-payfit-anomaly-source, rule-evp-nir-key-anomaly-grain, rule-evp-nir-key-anomaly-without-company, rule-evp-nir-key-no-failure, rule-evp-nir-key-never-shown, rule-evp-link-causes, rule-evp-link-no-identity, rule-evp-link-unknown-creche, rule-evp-link-incomplete-read, rule-evp-payfit-scope-every-read, rule-evp-payfit-scope-introspection-failed, rule-evp-payfit-scope-format, rule-evp-payfit-scope-read-only, rule-evp-company-named-in-anomalies, rule-evp-secrets-never-exposed]
+    provenance: inferred
+    cross_owner_tests: []
+  # Version v4-evp-fiabilite-nir: one operation is added, read-only, same capability as GET /sources (sources:read: RH and
+  # SUPERADMIN; the others get 403, anonymous 401). No ownership: the data is not row-scoped. `allow: []` like the other
+  # operations of the sources group; the matrix by role is proved by acceptance-v4-matching-rates.test.ts and, since
+  # v5-evp-rattachement-nir (rates counted in persons: linked / unlinked), by acceptance-v5-people-rates.test.ts.
+  - method: GET
+    path: /sources/aqoona/matching-rates
+    action: sources:matching-rates
+    allow: []
+    ownership: none
+    rules: [rule-evp-matching-rates-route, rule-evp-matching-rates-same-rights, rule-evp-matching-rates-people, rule-evp-matching-rates-company-of-person, rule-evp-matching-rates-no-company, rule-evp-matching-rates-live, rule-evp-matching-rates-consistency, rule-evp-matching-rates-unknown-mode, rule-evp-matching-rates-percent, rule-evp-matching-rates-no-nir, rule-evp-nir-key-never-shown, rule-evp-aqoona-nir-never-stored, rule-evp-sources-readonly]
+    provenance: user
+    cross_owner_tests: []
+  # Version v5-evp-rattachement-nir: one operation is added, read-only, with the same rights as the Sources screen and as
+  # GET /sources/aqoona/matching-rates (RH and SUPERADMIN; the others get 403, anonymous 401). Nominal list of the persons
+  # not linked to a PayFit collaborator, with the cause and the crèches, never a NIR. No ownership: the data is not row-scoped.
+  - method: GET
+    path: /sources/aqoona/unlinked-people
+    action: sources:unlinked-people
+    allow: []
+    ownership: none
+    rules: [rule-evp-unlinked-list, rule-evp-unlinked-list-same-rights, rule-evp-unlinked-list-no-nir, rule-evp-unlinked-list-grain, rule-evp-unlinked-list-paging, rule-evp-unlinked-list-all-causes-visible, rule-evp-link-causes, rule-evp-link-person-both-states, rule-evp-link-no-identity, rule-evp-sources-readonly, rule-evp-secrets-never-exposed]
+    provenance: user
+    cross_owner_tests: []

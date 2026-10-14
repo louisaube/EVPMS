@@ -1,0 +1,177 @@
+# Questions pour le propriétaire : specifications/evp/implementation-plans/v2-evp-sources/questions.yaml
+# Cinq questions au plus. Chacune change ce qui est construit et donc la recette ; le défaut recommandé est écrit dans les plans.
+- id: Q-EVP-01
+  titre: Comment le navigateur remet le jeton d'identité Google au serveur
+  regles: [rule-evp-google-flow-redirect]
+  effet_recette: oui
+  decideur: proprietaire
+  observable: oui
+  situation: "Une personne du domaine micro-stars.fr, inscrite et active, clique sur « Se connecter avec Google » sur /connexion ; le serveur reçoit un jeton d'identité dont la signature a été altérée."
+  options:
+    - code: A
+      libelle: Redirection serveur avec code d'autorisation (flux déjà en place), le serveur échange le code et vérifie le jeton reçu de Google
+      cout: leger
+      ouvre: []
+      resultat: "Aucune session n'est ouverte ; la personne revient sur /connexion?erreur=echec. Le studio ne contient aucun identifiant Google ; la protection contre la falsification de requête repose sur `state`, `nonce` et PKCE."
+      test: { route: "GET /google-sign-in/callback", entree: "code valide, le faux serveur Google renvoie un jeton à signature altérée", attendu: "302 vers /connexion?erreur=echec, sans cookie de session ; POST /google-sign-in/credential n'existe pas (404)" }
+    - code: B
+      libelle: Bouton « Se connecter avec Google » (Google Identity Services) qui envoie le jeton en POST au serveur, avec contrôle CSRF `g_csrf_token`
+      cout: lourd
+      ouvre: [identifiant client Google public dans le studio, nouvelle route POST /google-sign-in/credential à déclarer, origine autorisée côté Google Cloud, retrait des routes start et callback]
+      resultat: "Aucune session n'est ouverte ; la personne revient sur /connexion?erreur=echec. Un POST dont le `g_csrf_token` du cookie diffère de celui du corps est refusé de la même façon."
+      test: { route: "POST /google-sign-in/credential", entree: "corps { credential: jeton à signature altérée, g_csrf_token } et cookie g_csrf_token identique", attendu: "302 vers /connexion?erreur=echec, sans cookie de session ; GET /google-sign-in/callback n'existe plus (404)" }
+  defaut: A
+
+- id: Q-EVP-02
+  titre: Correspondance des demi-journées PayFit (moment) avec le matin et l'après-midi d'EVP
+  regles: [rule-evp-payfit-half-day-mapping]
+  effet_recette: oui
+  decideur: proprietaire
+  observable: oui
+  situation: "Un dossier « À saisir » commence l'après-midi (début APRES_MIDI) et finit le soir (fin APRES_MIDI) ; PayFit renvoie la même absence, approuvée, avec startDate.moment = middle-of-day et endDate.moment = end-of-day."
+  options:
+    - code: A
+      libelle: "Lecture selon la position. Début : beginning-of-day = matin, middle-of-day = après-midi. Fin : middle-of-day = matin, end-of-day = après-midi. Toute autre combinaison est non interprétable"
+      cout: leger
+      ouvre: []
+      resultat: "Le dossier passe à « Présente dans PayFit ». Une absence PayFit dont le début vaut end-of-day (ou la fin beginning-of-day) n'est jamais confirmée : anomalie « Demi-journée PayFit non interprétable »."
+      test: { route: "POST /sources/payfit/refresh puis GET /absences/{id}", entree: "dossier A_SAISIR début APRES_MIDI fin APRES_MIDI ; absence PayFit approved, début middle-of-day, fin end-of-day", attendu: "run SUCCEEDED, dossier DANS_PAYFIT" }
+    - code: B
+      libelle: Lecture littérale, indépendante de la position. beginning-of-day = matin, end-of-day = après-midi, middle-of-day jamais interprété
+      cout: leger
+      ouvre: []
+      resultat: "Le dossier reste « À saisir » avec le blocage « à vérifier » et l'anomalie « Demi-journée PayFit non interprétable » : toute demi-journée de départ à midi doit être traitée à la main par la RH."
+      test: { route: "POST /sources/payfit/refresh puis GET /absences/{id}", entree: "dossier A_SAISIR début APRES_MIDI fin APRES_MIDI ; absence PayFit approved, début middle-of-day, fin end-of-day", attendu: "run SUCCEEDED, dossier toujours A_SAISIR, une anomalie « Demi-journée PayFit non interprétable »" }
+  defaut: A
+
+- id: Q-EVP-03
+  titre: Annulation demandée dans PayFit mais pas encore actée
+  regles: [rule-evp-payfit-pending-cancellation]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "Un dossier « Présente dans PayFit » a été confirmé sur une absence approved ; à la lecture suivante (statut `all`) PayFit renvoie la même absence avec le statut pending_cancellation."
+  options:
+    - code: A
+      libelle: Aucune alerte tant que PayFit n'a pas acté l'annulation (statut cancelled)
+      cout: leger
+      ouvre: []
+      resultat: "Le dossier reste sans alerte ; l'alerte d'annulation n'apparaît qu'à la lecture où le statut devient cancelled."
+      test: { route: "POST /sources/payfit/refresh puis GET /notifications", entree: "dossier DANS_PAYFIT, absence PayFit relue en pending_cancellation", attendu: "aucune notification d'alerte ANNULEE créée" }
+    - code: B
+      libelle: Alerte d'annulation dès pending_cancellation
+      cout: leger
+      ouvre: [résolution de l'alerte si la demande est retirée, c'est-à-dire un retour à approved traité comme une restauration]
+      resultat: "La RH est alertée dès la demande d'annulation ; le dossier ne change pas d'état."
+      test: { route: "POST /sources/payfit/refresh puis GET /notifications", entree: "dossier DANS_PAYFIT, absence PayFit relue en pending_cancellation", attendu: "une notification d'alerte ANNULEE créée, dossier toujours DANS_PAYFIT" }
+  defaut: A
+
+- id: Q-EVP-04
+  titre: Une clé PayFit ou une adresse Aqoona échoue alors que les autres répondent
+  regles: [rule-evp-sources-partial-failure]
+  effet_recette: oui
+  decideur: proprietaire
+  observable: oui
+  situation: "Deux sociétés ont chacune une clé PayFit ; la première répond, la seconde est refusée (401). Même cas avec deux adresses Aqoona dont l'une échoue."
+  options:
+    - code: A
+      libelle: Tout ou rien. La lecture entière échoue et rien n'est copié
+      cout: leger
+      ouvre: []
+      resultat: "La lecture passe à « En erreur » avec le message « Clé refusée pour une société » (aucun nom de clé, aucun secret) ; les données du dernier succès sont conservées et aucune alerte de disparition n'est produite."
+      test: { route: "POST /sources/payfit/refresh puis GET /sources/runs/{id}", entree: "société 1 répond 200, société 2 répond 401 sur /companies/{id}/collaborators", attendu: "run FAILED, aucune absence de la société 1 modifiée" }
+    - code: B
+      libelle: Lecture partielle. Les sociétés qui répondent sont copiées, la société en échec est signalée
+      cout: lourd
+      ouvre: [nouvel état « Lecture partielle » de la source, anomalie « Société inaccessible » par société, couverture non exhaustive par société pour les alertes de disparition]
+      resultat: "La société 1 est copiée et sa couverture est exhaustive ; la société 2 garde ses données précédentes, sans alerte de disparition, avec l'anomalie « Société inaccessible » ; la source affiche « Lecture partielle »."
+      test: { route: "POST /sources/payfit/refresh puis GET /sources/runs/{id} et GET /sources", entree: "société 1 répond 200, société 2 répond 401 sur /companies/{id}/collaborators", attendu: "run SUCCEEDED, source en état PARTIAL, une anomalie de type payfit_company_unreachable" }
+  defaut: A
+
+- id: Q-EVP-05
+  titre: Compte déjà lié à un identifiant Google (sub) qui se présente avec un autre sub
+  regles: [rule-evp-google-sub-mismatch]
+  effet_recette: oui
+  decideur: proprietaire
+  observable: oui
+  situation: "Le compte de Camille est inscrit avec l'adresse camille@micro-stars.fr et déjà lié à un sub S1 ; un jeton valide du domaine, e-mail vérifié, arrive avec la même adresse mais un sub S2 (compte Google recréé, ou usurpation d'une adresse recyclée)."
+  options:
+    - code: A
+      libelle: Refus. Le compte reste lié à S1 ; le déblocage se fait hors application
+      cout: leger
+      ouvre: []
+      resultat: "Connexion refusée avec le message commun « Ce compte n'est pas autorisé à utiliser EVP. » ; la liaison n'est pas modifiée, la personne doit passer par un correctif en base."
+      test: { route: "GET /google-sign-in/callback", entree: "compte lié à S1, jeton valide de même adresse avec sub S2", attendu: "302 vers /connexion?erreur=non_autorise, sans cookie de session ; google_sub inchangé" }
+    - code: B
+      libelle: Refus, avec un bouton « Réinitialiser la liaison Google » pour la RH et le superadmin
+      cout: lourd
+      ouvre: ["route POST /access-accounts/{id}/reset-google-link à déclarer",capacité à choisir, entrée de journal, bouton sur l'écran Accès, comptes gérables seulement]
+      resultat: "Même refus d'abord. Après réinitialisation par un gestionnaire, la première connexion valide suivante lie le nouveau sub."
+      test: { route: "POST /access-accounts/{id}/reset-google-link puis GET /google-sign-in/callback", entree: "compte lié à S1, réinitialisation, puis jeton valide de même adresse avec sub S2", attendu: "200 sur la réinitialisation, puis 302 vers / avec cookie de session ; google_sub = S2" }
+  defaut: A
+
+- id: Q-EVP-06
+  titre: Comment l'API de test passe des fixtures de la v1 aux lecteurs réels pointés vers des serveurs factices
+  regles: [rule-evp-sources-configurable]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "L'API de test tourne avec des serveurs factices HTTP pour la v2 ; seuls Google Sheets et Aqoona sont configurés, PayFit ne l'est pas ; un test lance la lecture PayFit."
+  options:
+    - code: A
+      libelle: Un seul interrupteur global EVP_SOURCES_DRIVER (real ou fake) pour tout le processus
+      cout: leger
+      ouvre: []
+      resultat: "En real, les trois sources sont réelles : PayFit non configuré se termine FAILED sources.not_configured. Les tests de la v1 (fixtures) et ceux de la v2 ne tournent pas dans la même API : la recette lance l'API de test deux fois, une par pilote."
+      test: { route: "POST /sources/payfit/refresh puis GET /sources/runs/{id}", entree: "EVP_SOURCES_DRIVER=real, PAYFIT_API_KEYS absent", attendu: "run FAILED, lastError.code sources.not_configured" }
+    - code: B
+      libelle: Un lecteur réel par source dès que sa configuration est présente, fixtures de la v1 sinon (hors production seulement)
+      cout: leger
+      ouvre: [priorité entre EVP_SOURCES_DRIVER et la présence de configuration, comportement en production inchangé (jamais de fixtures)]
+      resultat: "Les tests de la v1 et de la v2 tournent dans la même API de test : PayFit non configuré lit ses fixtures et se termine SUCCEEDED. En production, une source non configurée reste FAILED sources.not_configured."
+      test: { route: "POST /sources/payfit/refresh puis GET /sources/runs/{id}", entree: "Sheets et Aqoona configurés, PAYFIT_API_KEYS absent, fixture PayFit présente, hors production", attendu: "run SUCCEEDED, données lues des fixtures" }
+  defaut: A
+
+- id: Q-EVP-07
+  titre: Identité utilisée pour lire le tableau des crèches (Google Sheets)
+  regles: [rule-evp-sheets-service-account]
+  effet_recette: oui
+  decideur: proprietaire
+  observable: oui
+  situation: "Le classeur des crèches est partagé en lecture ; l'application doit présenter une identité à Google pour lire l'onglet « Contacts des crèches »."
+  options:
+    - code: A
+      libelle: Compte de service (adresse e-mail et clé privée), flux JWT-bearer
+      cout: leger
+      ouvre: []
+      resultat: "L'application obtient un jeton en signant une assertion avec la clé privée du compte de service, que l'on partage en lecture sur le classeur. Aucune personne n'est impliquée, rien n'expire."
+      test: { route: "POST /sources/sheets/refresh", entree: "serveur factice d'échange de jeton", attendu: "le serveur factice reçoit grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer avec une assertion RS256 portant la portée spreadsheets.readonly" }
+    - code: B
+      libelle: Jeton de renouvellement OAuth d'un compte Google de personne (client OAuth de l'application)
+      cout: lourd
+      ouvre: [qui consent et avec quel compte, révocation si la personne quitte l'entreprise ou change de mot de passe, stockage du jeton de renouvellement, écran de consentement Google Cloud]
+      resultat: "L'application lit le classeur avec les droits d'une personne ; la lecture échoue (source refusée) si le consentement est révoqué."
+      test: { route: "POST /sources/sheets/refresh", entree: "serveur factice d'échange de jeton", attendu: "le serveur factice reçoit grant_type=refresh_token avec le jeton de renouvellement configuré, sans assertion" }
+  defaut: A
+
+- id: Q-EVP-08
+  titre: Lignes Aqoona inexploitables dans une réponse par ailleurs lisible
+  regles: [rule-evp-aqoona-unexpected-format]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "L'adresse Aqoona renvoie quatre enregistrements ; l'un d'eux n'a pas de jour exploitable."
+  options:
+    - code: A
+      libelle: Tolérant. La ligne est écartée et comptée dans une anomalie ; la lecture échoue seulement si plus de la moitié des lignes sont inexploitables
+      cout: leger
+      ouvre: []
+      resultat: "La lecture réussit, trois plannings sont copiés, l'anomalie « Ligne Aqoona inexploitable » apparaît avec un décompte."
+      test: { route: "POST /sources/aqoona/refresh puis GET /sources/aqoona/anomalies", entree: "quatre enregistrements dont un sans jour", attendu: "run SUCCEEDED, 3 plannings, une anomalie de ligne inexploitable" }
+    - code: B
+      libelle: Strict. Une seule ligne inexploitable fait échouer toute la lecture
+      cout: leger
+      ouvre: []
+      resultat: "La lecture est « En erreur » (format inattendu) et rien n'est copié ; les plannings du dernier succès sont conservés."
+      test: { route: "POST /sources/aqoona/refresh puis GET /sources/runs/{id}", entree: "quatre enregistrements dont un sans jour", attendu: "run FAILED, lastError.code sources.unexpected_format, aucun planning modifié" }
+  defaut: A

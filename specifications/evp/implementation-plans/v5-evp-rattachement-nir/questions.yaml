@@ -1,0 +1,111 @@
+# Questions pour le propriétaire : specifications/evp/implementation-plans/v5-evp-rattachement-nir/questions.yaml
+# Cinq questions (numérotation du module EVP, suite de Q-EVP-18) ; Q-EVP-22 et Q-EVP-23 ajoutées par le backend. Chacune change ce qui est construit et donc la recette ; le défaut recommandé est écrit dans les plans.
+- id: Q-EVP-19
+  titre: Un même NIR porté par des collaboratrices de deux sociétés PayFit
+  regles: [rule-evp-link-nir-two-companies]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "Une collaboratrice de la société Alpha et une collaboratrice de la société Beta portent dans PayFit le même NIR (clé juste). Une ligne Aqoona d'une crèche d'Alpha porte ce NIR. Une lecture de PayFit puis une lecture d'Aqoona sont lancées."
+  options:
+    - code: A
+      libelle: Considérer le NIR ambigu, ne rattacher personne et signaler la cause
+      cout: leger
+      ouvre: []
+      resultat: "La personne est non reliée, avec la cause « NIR porté par plusieurs collaboratrices PayFit » ; une salariée n'appartient qu'à un établissement, l'écart est une anomalie à corriger dans PayFit."
+      test: { route: "GET /sources/aqoona/unlinked-people", entree: "pilote fake, même NIR (clé juste) chez une collaboratrice d'Alpha et une de Beta, une ligne Aqoona de ce NIR dans une crèche d'Alpha, lectures PayFit puis Aqoona", attendu: "200, items contient la personne avec la cause NIR_AMBIGUOUS ; GET /sources/aqoona/matching-rates : aucune personne rattachée (linked.count 0) pour Alpha et pour Beta" }
+    - code: B
+      libelle: Rattacher à la collaboratrice de la société de la crèche quand une seule des deux l'est, ambigu sinon
+      cout: lourd
+      ouvre: [une règle de départage par la société de la crèche, qui ressemble à l'appariement par société de la v3 que la demande abandonne, risque de rattacher une volante à la mauvaise collaboratrice, le doublon de NIR dans PayFit n'est plus signalé]
+      resultat: "La personne est rattachée à la collaboratrice d'Alpha ; l'écart entre les deux sociétés PayFit reste invisible."
+      test: { route: "GET /sources/aqoona/matching-rates", entree: "pilote fake, même NIR (clé juste) chez une collaboratrice d'Alpha et une de Beta, une ligne Aqoona de ce NIR dans une crèche d'Alpha, lectures PayFit puis Aqoona", attendu: "200, la ligne d'Alpha a linked.count 1 ; GET /sources/aqoona/unlinked-people ne contient pas la personne" }
+  defaut: A
+
+- id: Q-EVP-20
+  titre: Cause d'une ligne dont le NIR est introuvable quand la lecture de PayFit est incomplète
+  regles: [rule-evp-link-incomplete-read]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "La clé PayFit de la société Alpha n'a pas la portée collaborators:social-security:read, les NIR d'Alpha ne sont donc pas lus. Une ligne Aqoona porte un NIR de clé juste qu'aucune collaboratrice des autres sociétés ne porte. Une lecture d'Aqoona est lancée."
+  options:
+    - code: A
+      libelle: Toujours dire « NIR inconnu de PayFit »
+      cout: leger
+      ouvre: []
+      resultat: "La personne est non reliée avec la cause « NIR inconnu de PayFit », même si le NIR est peut-être celui d'une collaboratrice d'Alpha que la lecture n'a pas pu voir."
+      test: { route: "GET /sources/aqoona/unlinked-people", entree: "pilote fake, Alpha dans nirScopeMissing, ligne Aqoona au NIR de clé juste porté par aucune collaboratrice lisible, lecture d'Aqoona", attendu: "200, items contient la personne avec la cause NIR_UNKNOWN" }
+    - code: B
+      libelle: "Dire « NIR non vérifié : lecture PayFit incomplète » dès qu'au moins une société est illisible ou sans la portée"
+      cout: leger
+      ouvre: [une cause de plus à la liste, la cause redevient « NIR inconnu de PayFit » seulement quand toutes les sociétés sont lues]
+      resultat: "La personne est non reliée avec la cause « NIR non vérifié : lecture PayFit incomplète » ; elle renvoie aux anomalies de portée plutôt qu'à une correction du NIR."
+      test: { route: "GET /sources/aqoona/unlinked-people", entree: "pilote fake, Alpha dans nirScopeMissing, ligne Aqoona au NIR de clé juste porté par aucune collaboratrice lisible, lecture d'Aqoona", attendu: "200, items contient la personne avec la cause PAYFIT_INCOMPLETE" }
+  defaut: B
+
+- id: Q-EVP-21
+  titre: Ligne Aqoona rattachée par son NIR dont l'établissement n'est pas dans le référentiel des crèches
+  regles: [rule-evp-link-unknown-creche]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "Une ligne Aqoona porte le NIR de clé juste d'une collaboratrice d'Alpha ; son établissement ne correspond à aucune crèche vérifiée du référentiel. Une lecture de PayFit puis une lecture d'Aqoona sont lancées."
+  options:
+    - code: A
+      libelle: Rattacher la personne par son NIR sans autre signalement
+      cout: leger
+      ouvre: []
+      resultat: "La personne est rattachée et comptée pour sa société ; le créneau garde une crèche vide. Aucune anomalie ne concerne l'établissement inconnu."
+      test: { route: "GET /sources/aqoona/anomalies", entree: "pilote fake, ligne Aqoona au NIR de clé juste d'une collaboratrice d'Alpha, établissement absent du référentiel, lectures PayFit puis Aqoona", attendu: "200, aucune anomalie « Planning non rattaché » ni « Établissement Aqoona inconnu » pour cette ligne ; GET /sources/aqoona/matching-rates : linked.count 1 pour Alpha" }
+    - code: B
+      libelle: Rattacher la personne et signaler l'établissement inconnu par une anomalie distincte
+      cout: lourd
+      ouvre: [un type d'anomalie de plus, une anomalie par établissement inconnu à définir, hors de la demande de rattachement]
+      resultat: "La personne est rattachée ; les anomalies d'Aqoona contiennent « Établissement Aqoona inconnu » avec le nom de l'établissement lu, pour corriger le référentiel."
+      test: { route: "GET /sources/aqoona/anomalies", entree: "pilote fake, ligne Aqoona au NIR de clé juste d'une collaboratrice d'Alpha, établissement absent du référentiel, lectures PayFit puis Aqoona", attendu: "200, une anomalie « Établissement Aqoona inconnu » dont le sujet est le nom de l'établissement, aucune « Planning non rattaché » ; GET /sources/aqoona/matching-rates : linked.count 1 pour Alpha" }
+  defaut: A
+
+- id: Q-EVP-22
+  titre: Personne rattachée par un créneau et non reliée par un autre
+  regles: [rule-evp-link-person-both-states]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "Dans Aqoona, « Camille DURAND » a un créneau avec son NIR de clé juste (connu de PayFit) et, dans une autre crèche, un créneau sans NIR. Une lecture de PayFit puis une lecture d'Aqoona sont lancées."
+  options:
+    - code: A
+      libelle: Compter la personne comme rattachée et comme non reliée, la liste signale le créneau sans NIR
+      cout: leger
+      ouvre: []
+      resultat: "Le rattachement se fait ligne par ligne par le NIR seul : la ligne sans NIR n'est pas rattachée, et la personne figure dans la liste avec la cause « NIR absent dans Aqoona » et sa crèche, bien qu'elle soit aussi comptée rattachée."
+      test: { route: "GET /sources/aqoona/unlinked-people", entree: "pilote fake, deux lignes Aqoona « Camille DURAND », l'une au NIR de clé juste d'une collaboratrice, l'autre sans NIR, lectures PayFit puis Aqoona", attendu: "200, items contient « Camille DURAND » (NIR_ABSENT) ; GET /sources/aqoona/matching-rates : linked.count 1 et unlinked.count 1 pour la société" }
+    - code: B
+      libelle: Ne pas lister comme non reliée une personne déjà rattachée par un autre créneau
+      cout: lourd
+      ouvre: [reconnaître la personne par son nom pour écarter son créneau sans NIR, ce que la demande exclut pour le rattachement, homonymes à départager]
+      resultat: "La personne est comptée rattachée seulement ; son créneau sans NIR reste non rattaché sans figurer dans la liste."
+      test: { route: "GET /sources/aqoona/unlinked-people", entree: "pilote fake, deux lignes Aqoona « Camille DURAND », l'une au NIR de clé juste d'une collaboratrice, l'autre sans NIR, lectures PayFit puis Aqoona", attendu: "200, items ne contient pas « Camille DURAND » ; GET /sources/aqoona/matching-rates : linked.count 1 et unlinked.count 0" }
+  defaut: A
+
+- id: Q-EVP-23
+  titre: NIR trouvé chez PayFit pour une collaboratrice que la dernière lecture PayFit n'a pas enregistrée
+  regles: [rule-evp-link-employee-not-read]
+  effet_recette: oui
+  decideur: defaut
+  observable: oui
+  situation: "Le NIR d'une ligne Aqoona est porté, dans PayFit en direct, par une collaboratrice d'Alpha absente de la base parce que la lecture complète de PayFit n'a pas encore eu lieu (ou date d'avant son arrivée). Une lecture d'Aqoona est lancée."
+  options:
+    - code: A
+      libelle: "Ne pas rattacher, cause « NIR non vérifié : lecture PayFit incomplète »"
+      cout: leger
+      ouvre: []
+      resultat: "La personne est non reliée avec la cause PAYFIT_INCOMPLETE ; elle sera rattachée à la lecture d'Aqoona qui suit une lecture de PayFit."
+      test: { route: "GET /sources/aqoona/unlinked-people", entree: "pilote fake, collaboratrice dans les NIR en direct d'Alpha mais absente de payfit_employees, ligne Aqoona de son NIR, lecture d'Aqoona sans lecture de PayFit", attendu: "200, items contient la personne avec la cause PAYFIT_INCOMPLETE ; GET /sources/aqoona/matching-rates : linked.count 0" }
+    - code: B
+      libelle: Rattacher par le NIR, sans nom PayFit
+      cout: lourd
+      ouvre: [un identifiant de collaboratrice sans fiche, le nom affiché pris dans Aqoona, l'identifiant jamais retrouvé dans les contrats et absences de PayFit]
+      resultat: "La personne est rattachée et comptée pour Alpha, avec le nom lu dans Aqoona."
+      test: { route: "GET /sources/aqoona/matching-rates", entree: "pilote fake, collaboratrice dans les NIR en direct d'Alpha mais absente de payfit_employees, ligne Aqoona de son NIR, lecture d'Aqoona sans lecture de PayFit", attendu: "200, linked.count 1 pour Alpha ; GET /sources/aqoona/unlinked-people ne contient pas la personne" }
+  defaut: A

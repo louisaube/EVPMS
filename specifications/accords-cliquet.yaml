@@ -1,0 +1,572 @@
+# Accords du propriétaire sur le cliquet de la recette : reculs (test supprimé, attendu relâché) que la demande
+# d'une version rend nécessaires après l'écriture du code. Écrit par `cuisine accorde --enregistrer`, commit
+# « proprietaire » ; le cliquet ne lit que l'état de ce fichier à ce commit.
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-evp-access.test.ts
+  titre: '[rule-evp-access-list-scope] an item has exactly id, name, email, role, active and creches [{code,name}]'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-evp-sources.test.ts
+  titre: '[rule-evp-sources-nir-discarded] a registration number that looks like a NIR is discarded, never stored, never displayed, logged nor reported; only the count « Matricule écarté » is visible'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-evp-sources.test.ts
+  titre: '[rule-evp-sources-links] the planning is matched by normalised crèche name, then first and last name inside that crèche, only when the match is unique'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-evp-sources.test.ts
+  titre: '[rule-evp-sources-no-invention] two collaborators with the same name in the same crèche are never guessed: the row stays unattached and an anomaly is visible'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-identity] [rule-evp-google-sub-email-change] a bound sub that comes with another address opens the session of its account; the administered address is not changed'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-identity] [rule-evp-google-sub-unique] once a sub is bound, only the sub opens the session: another registered address presented with that sub gets the account bound to it'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-mismatch] [rule-evp-login-single-denial] an account bound to a sub refuses any other sub, even with the same address: non_autorise, binding unchanged, no session'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-mismatch][D-0008] account bound to S1, valid token of the same address with sub S2: 302 to /connexion?erreur=non_autorise, no session cookie, google_sub unchanged'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-get-only] [rule-evp-aqoona-url-secret] one single GET per address, on the address as configured: no header of authentication, no parameter added'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-nir-discarded] a registration number that looks like a NIR is discarded, never stored, displayed, logged nor reported; only the count « Matricule écarté » is visible'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-links] the planning is matched by normalised crèche name, then first and last name inside that crèche, only when the match is unique'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v3-evp-acces-contrats-siret
+  fichier: acceptance/acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-no-invention] two collaborators with the same name in the same crèche are never guessed: the row stays unattached and an anomaly is visible'
+  recul: test supprimé
+  motif: 'Demande v3-evp-acces-contrats-siret, §1 (adresse Google modifiée, compte recréé, champ googleLinked de l''écran Accès), §4 (format Aqoona Pros, dates de lecture dans l''adresse) et §5 (NIR clé
+    transitoire) : accord explicite du propriétaire le 12/10/2026 sur les 12 reculs présentés'
+  accorde_le: '2026-10-12'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-link-nir-only] [rule-evp-link-causes] a NIR that matches nobody does not fall back to the names: the row is not attached, with the cause « NIR inconnu de PayFit »'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-payfit-scope-coverage] the check is made for the companies read during the reading of Aqoona only: without any row with a NIR, no company is reported, whatever the state of its key'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/aqoona-readers.test.ts
+  titre: '[rule-evp-aqoona-nir-over-name] [rule-evp-aqoona-nir-transient-key] a NIR matches the collaborator whatever the names, counts in « Rapprochés par NIR » and is stored nowhere'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/aqoona-readers.test.ts
+  titre: '[rule-evp-aqoona-nir-fallback-name] [rule-evp-aqoona-nir-scope-company] an unknown NIR, or one that only belongs to another company, falls back on the names'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/aqoona-readers.test.ts
+  titre: '[rule-evp-aqoona-nir-ambiguous] two distinct collaborators for one NIR: no collaborator, no fall-back on the names, an anomaly without the NIR'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/aqoona-readers.test.ts
+  titre: '[rule-evp-sources-no-invention] two homonyms without NIR: the crèche is attached, no collaborator is guessed'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/aqoona-readers.test.ts
+  titre: '[rule-evp-aqoona-nir-lazy] [rule-evp-aqoona-nir-unavailable] PayFit is asked for the companies that have a NIR row only; when it cannot answer the names are used and the SIRET is reported'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/aqoona-readers.test.ts
+  titre: '[rule-evp-aqoona-nir-unavailable] a failing NIR reading is an anomaly, never a failure of the reading'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/aqoona-readers.test.ts
+  titre: '[rule-evp-aqoona-dedupe] identical rows are stored once'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/aqoona-readers.test.ts
+  titre: '[rule-evp-aqoona-multi-siret-same-day] [rule-evp-employee-multi-company] the same hours in two establishments of two SIRET give two series, each with the collaborator of its company'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/aqoona-readers.test.ts
+  titre: '[rule-evp-aqoona-etab-unique] an unknown establishment is not attached; one shared by two verified crèches is not attached either'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/aqoona-readers.test.ts
+  titre: '[rule-evp-aqoona-text-normalised] stray spaces and case in names and establishments do not prevent the matching'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-unknown-mode] a slot of unknown mode makes the whole answer unavailable, window kept'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-three-parts] [rule-evp-matching-rates-percent] [rule-evp-matching-rates-no-company] counts exact, percent to one decimal, French order, last line without company'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-no-nir] the answer holds no long digit series other than SIRET'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/matching-rates.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] the column refuses another value than NIR, NOM, AUCUN, INCONNU and defaults to INCONNU'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/nir-key-readers.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] [rule-evp-matching-method-first-row] the mode is NIR, NOM or AUCUN, never INCONNU; a duplicate keeps the mode of the first row'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/nir-key-readers.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] [rule-evp-nir-key-anomaly-grain] a Aqoona NIR of wrong key is used as no NIR: names, one anomaly per person with the slot count, company not asked, value shown
+    nowhere'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/nir-key-readers.test.ts
+  titre: '[rule-evp-payfit-scope-missing-fallback] [rule-evp-payfit-scope-detail] scope missing: the detail names the scope; unreadable company: the short sentence; names used in both cases'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/nir-key-readers.test.ts
+  titre: '[rule-evp-nir-key-payfit-anomaly-source] a PayFit collaborator of wrong key is named from payfit_employees, else « Collaboratrice <identifiant> »; no value'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/nir-key-readers.test.ts
+  titre: '[rule-evp-payfit-scope-coverage] a company without any Aqoona row with a right NIR is not asked and produces no anomaly'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/payfit-scope-units.test.ts
+  titre: '[rule-evp-payfit-scope-checked] [rule-evp-payfit-scope-fresh] one introspection per call, the scope granted: the collaborators are read'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/payfit-scope-units.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] [rule-evp-nir-key-absent-ok] a wrong key leaves the table and is listed by identifier; 13 characters stay used'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/payfit-scope-units.test.ts
+  titre: '[rule-evp-payfit-scope-checked] scope missing: no GET of the collaborators'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: api/src/features/sources/tests/payfit-scope-units.test.ts
+  titre: '[rule-evp-payfit-scope-read-only] a SIRET without a key is unavailable and nothing is sent; the only POST is the introspection'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026) : 25 tests supprimés, rendus caducs par la demande v5 (rattachement par le NIR seul sur tout le réseau, taux comptés en personnes, portée PayFit contrôlée à
+    chaque lecture PayFit) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-evp-sources.test.ts
+  titre: '[rule-evp-sources-links] [rule-evp-aqoona-etab-unique] the planning is matched by normalised crèche name; the collaborator is then matched by first and last name inside that crèche, only when
+    the match is unique'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-links] [rule-evp-aqoona-etab-unique] the planning is matched by normalised crèche name; the collaborator is then matched by first and last name inside that crèche, only when
+    the match is unique'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-company-id] the company_id kept is reused by the following readings without a new introspection'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-fallback-name] without NIR, or when the NIR matches nobody, the match is made by first and last name as before; a registration number of another length is treated as absent'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-scope-company] a NIR carried only by a collaborator of another company does not count: the row falls back to the names inside the company of its crèche, and stays unmatched
+    when the names designate nobody'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-unavailable] when the NIR of a company cannot be read, its rows are matched by names and the anomaly « Rapprochement par NIR indisponible » names the SIRET; the reading is
+    neither FAILED nor PARTIAL for that reason'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-unavailable] [rule-evp-aqoona-nir-lazy] the unavailability is reported only for the companies that have rows with a NIR; another company keeps matching by NIR'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-multi-siret-same-day] [rule-evp-employee-multi-company] a person in two establishments of two SIRET the same day, same hours included: two series, each attached to the crèche
+    of its establishment and to the collaborator of its own company; no anomaly'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-employee-multi-company] [rule-evp-aqoona-nir-scope-company] one person carrying the same NIR in two companies (a collaborator in each): the rows of each establishment attach to the collaborator
+    of its own company, none is ambiguous'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-multi-siret-same-day] the same person in two establishments of two SIRET the same day, same hours: two series, one per crèche and per company, no anomaly'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-lazy] [rule-evp-sources-readonly] with NIR rows for one company only, only that company is queried, in read only; the PayFit tables are untouched'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-fallback-name] a NIR that matches nobody falls back to the names'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-unavailable] scope missing (403), company unreachable (500) or key absent: the rows of that company fall back to the names, the anomaly « Rapprochement par NIR indisponible
+    » names the SIRET, the reading stays SUCCEEDED and not PARTIAL'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-unknown-mode][D-0016] GET /sources/aqoona/matching-rates with a slot of unknown mode stored among slots of mode NIR and NOM: 200, available false, items empty — no partial
+    rate, no fourth part'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-unknown-mode] the answer keeps the last reading and the window of GET /sources when it is unavailable because of an unknown mode'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-unknown-mode] a slot written before the column existed (default value) is of unknown mode; the next complete reading replaces it and the rates come back'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-three-parts] [rule-evp-matching-rates-company] [rule-evp-matching-rates-consistency] one line per company with name and SIRET of PayFit, each slot in exactly one part,
+    a last line without company; the totals equal « Plannings lus », the NIR counts equal « Rapprochés par NIR », NIR + names equal « Plannings rattachés »'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-three-parts] an ambiguous NIR is unmatched, a wrong key falls back to the names, a company whose NIR cannot be read falls back to the names: each slot is in one part only'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-live] [rule-evp-matching-rates-consistency] the rates follow the stored slots at once and a new reading replaces them: the rates always describe the last state'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-percent] the percentage is round(100 × count / total, 1) with exact counts: one third is 33.3 three times, 1/6 is 16.7, 5/6 is 83.3, 1/8 is 12.5, all by one part is 100'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-company] [rule-evp-matching-rates-no-company] companies are sorted by name in French order (case and accents ignored), then by identifier; the line without company is
+    last whatever its name would give; only companies with a slot are listed'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-no-company] slots without company and slots of a company that PayFit no longer knows are in the same last line « Sans société identifiée »'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-no-company][D-0015] GET /sources/aqoona/matching-rates with two slots, one from an establishment unknown of the referential and one attached by NIR to a collaborator of
+    Alpha, after a reading of Aqoona: 200, items contains the line of Alpha (total 1, byNir.count 1) and a line companyId null « Sans société identifiée » (total 1, unmatched.count 1)'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-company] two crèches of the same SIRET count for the same company; a person in two companies on the same day is counted in each'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] the column match_method exists, is text, not null, defaults to INCONNU and only accepts NIR, NOM, AUCUN and INCONNU'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] the column of the mode carries no NIR, digest or fragment: after a reading with NIR rows its values are only NIR, NOM or AUCUN, and no other column of the table
+    looks like a NIR'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-no-nir] [rule-evp-nir-key-never-shown] the answer holds only identifiers, SIRET, company names and counts: no NIR (right or wrong key, any form), no first or last name
+    of a collaborator, no secret, no address'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-route] [rule-evp-matching-rates-percent] the OpenAPI document carries the operation and the bounds of SourceAqoonaMatchingRatesDto; the five other operations of the sources
+    keep their path'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] [rule-evp-aqoona-nir-fallback-name] a row with a wrong key is treated as a row without NIR: matched by first and last name, counted by names, never by NIR'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-payfit-anomaly-source] the reading of PayFit alone reads no NIR: no anomaly of key is produced by it, whatever the NIR of its collaborators; only the companies whose NIR are
+    read by Aqoona are checked'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] the collaborator with a wrong key is found only by her names; she makes ambiguous no right NIR carried by another collaborator of the company'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-payfit-scope-missing-fallback] [rule-evp-payfit-scope-detail] [rule-evp-payfit-scope-checked] a company whose key lacks the scope: its NIR are not used (they may be in the answer), the
+    names are, the anomaly names the SIRET and the scope; the reading is neither FAILED nor PARTIAL'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-payfit-scope-coverage][D-0019] Alpha lacks the scope and no Aqoona row of its crèches carries a NIR: the reading of Aqoona gives no « Rapprochement par NIR indisponible » for the SIRET
+    of Alpha'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] a reading writes NIR, NOM or AUCUN on every slot and never INCONNU: by NIR, by names, unknown person, ambiguous NIR, unknown establishment, wrong key, value
+    that is no NIR'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-checked] [rule-evp-payfit-scope-missing-fallback] [rule-evp-payfit-scope-read-only] a key without the scope: PayFit delivers the NIR but the collaborators are not even requested;
+    the rows are matched by names, the anomaly names the SIRET and the scope, the reading is neither FAILED nor PARTIAL; the introspection is the only POST'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-checked] each company has its own scope: the company with the scope is read and matched by NIR, the other one only by names; one introspection per company and per reading,
+    whatever the number of rows'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-coverage] a key without the scope for a company that has no Aqoona row with a NIR is not even introspected and produces no anomaly'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-format] [rule-evp-payfit-scope-detail] an inactive token or an introspection refused (401, 403, 429, 5xx) means « company unreadable », not « scope missing »: the short
+    sentence, names used, reading SUCCEEDED and not PARTIAL, collaborators never requested'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-nir-key-both-sides] [rule-evp-nir-key-payfit-anomaly-source] a collaborator whose NIR has a wrong key is not used: found by her names only, named in the anomalies of Aqoona (SIRET in
+    the detail), never in those of PayFit; she does not make ambiguous the right NIR of another collaborator'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-nir-key-payfit-anomaly-source] the full reading of PayFit reads no NIR and flags no key; only the reading of Aqoona checks the companies it reads'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'
+- version: v5-evp-rattachement-nir
+  fichier: acceptance/acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-matching-rates-consistency] [rule-evp-matching-rates-three-parts] the rates describe the reading just made: NIR when the scope allows it, names when it does not'
+  recul: test supprimé
+  motif: 'Accord du propriétaire (13/10/2026, porte finale) : 41 tests supprimés par la QA en réécrivant les tests fondés sur le nom, comme la demande v5 l''exige (section 1 : NIR seul sur tout le réseau
+    ; section 2 : taux en personnes ; section 3 : portée PayFit contrôlée à chaque lecture PayFit, qui remplace D-0019) ; les règles toujours en vigueur restent couvertes par les tests actuels'
+  accorde_le: '2026-10-13'

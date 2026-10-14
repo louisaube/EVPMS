@@ -1,0 +1,1929 @@
+# Tests de recette vus rouges avant le code qui les satisfait. Écrit par .cuisine/scripts/rouge.py, jamais à la main.
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-access-guard-only-route] a route declared roles: [] with a business guard raises no access problem and is reported with allow: []'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-access-no-role-without-guard-refused] roles: [] without any business guard is a problem that names the route'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-access-owner-only-needs-role] ownerOnly with roles: [] is refused even with a business guard'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-access-undeclared-refused] a route without declaration is still refused, a guard-only route next to it is not'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-access-no-role-without-guard-refused] the server start-up check refuses roles: [] without guard and names the route'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-access-guard-only-route] the start-up check accepts roles: [] with a business guard'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-access-guard-only-regime] a roles: [] route answers 401 security.missing_token without a valid token, yet admits an ordinary user with one'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-access-guard-only-route] roles: [] never refuses by role, whereas roles: [admin] still refuses an ordinary user with security.access_denied'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-response-content-type] text/csv replaces application/json under the declared response'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-response-content-type] text/csv; charset=utf-8 is admitted and published as is'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-response-content-type] only the declared response changes: the others stay application/json, and the operation keeps its bearer and cookie security'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-response-content-type-default] the content type is the only difference: explicit application/json equals no declaration, and text/csv differs by that key alone'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-declarations.test.ts
+  titre: '[rule-foundation-response-content-type-closed-list] a content type outside the closed list stops the start-up and names the route'
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-garde-metier-reponses-non-json.test.ts
+  titre: is replaced by acceptance-garde-metier-declarations.test.ts
+  vu_rouge: '2026-10-11'
+  sur: 3746bc6
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-flow-redirect] [rule-evp-google-endpoints-configurable] [rule-evp-google-domain-configurable] [rule-evp-google-scopes-minimal] redirects to the configured authorization endpoint
+    with client_id, redirect_uri, hd, state, nonce and PKCE S256'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-flow-redirect] [rule-evp-google-endpoints-configurable] the redirect_uri is the configured return address of the API and each start has its own state, nonce and challenge'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-token-verified-server] starting a sign-in and reading the service status make no outgoing call to Google'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-token-verified-server] [rule-evp-google-flow-redirect] [rule-evp-session-8h] a valid identity token of an active, registered account opens an 8 hour session and redirects to the
+    safe path; the code is exchanged with the client secret and the PKCE verifier'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-flow-redirect] [rule-evp-login-safe-redirect] without redirection the person lands on /'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-session-8h] [rule-evp-login-domain-not-enough] the role of the session comes from the registered account, not from the token'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-iss] both forms of the issuer are accepted: accounts.google.com and https://accounts.google.com'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-hd] the hosted domain is compared by the code itself, without regard to case'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-exp] an expiry inside the 60 second clock tolerance is accepted'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-signature] a token signed by a key that Google does not publish (same kid) is refused: erreur=echec, no session, nothing bound'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-signature] [rule-evp-google-token-verified-server] a token whose payload was altered after signing is refused'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-exp] a token expired beyond the 60 second tolerance is refused'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-exp] a token without expiry is refused'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-token-verified-server] an id_token or credential sent by the browser in the callback address is ignored: only the token returned by Google for the code counts'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-flow-redirect] [rule-evp-google-error-causes] a state that does not match the flow cookie is refused: altered state, missing cookie, cookie of another flow'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-error-causes] a refusal from Google (error parameter) is erreur=annule, without exchanging the code'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-error-causes] a token endpoint that never answers ends in erreur=echec after the 10 second delay, not a hung request'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-certs-cache] the keys are cached according to Cache-Control max-age and read again once it has expired'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-certs-cache] without a usable max-age the keys are not kept beyond the request'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-certs-fail-closed] [rule-evp-google-certs-cache] an expired cache is not reused when the keys cannot be read again'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-certs-rotation] an unknown kid triggers one single re-read of the keys (a rotated key is then accepted) and never more than one forced re-read per minute'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-login-domain-not-enough] [rule-evp-login-single-denial] an absent account, an inactive account, a removed account and a directrice without crèche all get the very same refusal non_autorise'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-binding] [rule-evp-google-sub-identity] [rule-evp-google-sign-in-audit] the first valid sign-in of a registered, unbound account (address compared without regard to case)
+    binds the sub and traces it without the sub'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-identity] [rule-evp-google-sub-email-change] a bound sub that comes with another address opens the session of its account; the administered address is not changed'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-identity] [rule-evp-google-sub-unique] once a sub is bound, only the sub opens the session: another registered address presented with that sub gets the account bound to it'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-mismatch] [rule-evp-login-single-denial] an account bound to a sub refuses any other sub, even with the same address: non_autorise, binding unchanged, no session'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-mismatch][D-0008] account bound to S1, valid token of the same address with sub S2: 302 to /connexion?erreur=non_autorise, no session cookie, google_sub unchanged'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-flow-redirect][D-0005] valid code, the fake Google returns an identity token with an altered signature: 302 to /connexion?erreur=echec without session cookie; POST /google-sign-in/credential
+    does not exist (404)'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-unique] a sub never binds two accounts: the database refuses a duplicate'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-binding] two simultaneous first sign-ins of the same account with different subs bind exactly one sub; the other one is refused'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-binding] [rule-evp-google-error-causes] a token without sub, with an empty sub or with a sub longer than 255 characters is refused (erreur=echec); a sub of exactly 255 characters
+    is bound'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-session-8h] [rule-evp-login-domain-not-enough] the session opened by Google gives access to the business data of the account only'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-google-sign-in.test.ts
+  titre: '[rule-evp-secrets-never-exposed] no redirection address, audit entry or server log line carries the client secret, a code, a state or an identity token'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-get-only] [rule-evp-aqoona-url-secret] one single GET per address, on the address as configured: no header of authentication, no parameter added'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-get-only] a redirection is not followed: the target is never requested and the address is reported unreachable'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-get-only] an answer larger than 20 MB is refused: the reading ends FAILED and keeps the plannings of the last success'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-readonly] only reading calls are made on the addresses (GET), and nothing else is contacted'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-fields] [rule-evp-aqoona-field-mapping] the fields are found where the mapping file says (dotted paths below the record array): person, crèche, day, start and end'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-field-mapping] a mapping file with a record array at the root, days as DD/MM/YYYY and times as HH:mm:ss is honoured (the format is configuration, not code)'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-field-mapping] [rule-evp-aqoona-mapping-provisional] a mapping file that does not follow its schema ends the reading FAILED with sources.not_configured, without quoting its content'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-window] the window runs from D-28 to D+35: slots outside it are ignored, the bounds are kept'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-nir-discarded] a registration number that looks like a NIR is discarded, never stored, displayed, logged nor reported; only the count « Matricule écarté » is visible'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-links] the planning is matched by normalised crèche name, then first and last name inside that crèche, only when the match is unique'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-no-invention] two collaborators with the same name in the same crèche are never guessed: the row stays unattached and an anomaly is visible'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-no-auto-absence] [rule-evp-sources-aqoona] reading the planning never produces an absence, a notification or a dossier change'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-unexpected-format][D-0004] four records, one without a usable day: run SUCCEEDED, 3 plannings, one anomaly « Ligne Aqoona inexploitable »'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-unexpected-format] exactly half of the records unusable is tolerated; more than half fails the whole reading with sources.unexpected_format and keeps the plannings of the last
+    success'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-timeouts] [rule-evp-sources-error-codes] addresses that never answer end the reading FAILED with sources.unreachable after the 30 second delay of the call'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-partial-failure][D-0007] two addresses, one fails: run SUCCEEDED, source PARTIAL, the plannings of the address that answers are copied, those of the failing address are kept,
+    anomaly aqoona_address_unreachable named by the label of the address'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-manual] RH and the superadmin launch the Aqoona reading; directrice, RO and administratrice are refused (403), anonymous 401, and the addresses are never called for them'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-url-secret] [rule-evp-secrets-never-exposed] the full addresses (their token above all) appear nowhere after a success and after a failure: run, source, anomalies, audit trail,
+    notifications, exports, database dumps, server log'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-refresh-audited] the audit entry of a launched Aqoona reading carries neither address nor token'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-bearer] [rule-evp-payfit-company-id] each key is introspected once: POST with the key as Bearer and {"token": key}; the company_id is kept'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-company-id] the company_id kept is reused by the following readings without a new introspection'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-company-id] [rule-evp-sources-error-codes] an introspection answer without company_id ends FAILED with sources.unexpected_format and copies nothing'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-company] [rule-evp-payfit-collaborators] [rule-evp-payfit-contracts] [rule-evp-payfit-absences] [rule-evp-payfit-bearer] the four resources of each company are read with the exact
+    paths and the key of that company'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-window] [rule-evp-payfit-status-all] [rule-evp-payfit-pagination] absences are asked with status=all, from the start of M-2 to the end of M+2, 50 per page; lists with 50 per page'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-scopes] [rule-evp-sources-readonly] nothing is ever written in PayFit and no request asks for time:write: GET on the API, POST only for the introspection'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-pagination] all pages of collaborators, contracts and absences are read through meta.nextPageToken until null'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-pagination] [rule-evp-sources-error-codes] a page token that loops forever ends the reading FAILED with sources.unexpected_format instead of looping'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-company] [rule-evp-payfit-siret-check] the SIRET is read from identificationNumber, never from the deprecated siret field; the name is the name of the company, else the SIRET'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-siret-check] [rule-evp-sources-partial-failure] a company whose identificationNumber differs from the SIRET of its key is not read: anomaly « SIRET différent de la clé », and
+    the other company is still copied'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-collaborators] [rule-evp-payfit-contracts] [rule-evp-payfit-contracts-all-statuses] collaborators come with their company from the path, contracts of every status are kept, the
+    name comes from the collaborator and not from the deprecated fields of the contract'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-collaborators] the same collaborator and contract identifiers in two companies stay two local rows; a second reading does not duplicate'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-companies-without-creche] a company whose SIRET is the SIRET of no crèche is reported « Société sans crèche (SIRET) »'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-sources-readonly] [rule-evp-sources-no-auto-absence] reading PayFit creates no dossier and no notification by itself'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-errors] [rule-evp-sources-timeouts] a 4xx other than 429 is not retried: one single attempt'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-errors] [rule-evp-sources-timeouts] a persistent 429 ends FAILED with sources.rate_limited after exactly 3 attempts'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-errors] a 429 with Retry-After is waited out for the time announced, then retried and the reading succeeds'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-errors] a 429 without Retry-After is waited out with PAYFIT_RETRY_DELAY_MS, doubled at each attempt'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-sources-timeouts] a transient 5xx is retried and the reading succeeds'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-sources-partial-failure][D-0007] company 1 answers 200, company 2 answers 401 on collaborators: run SUCCEEDED, source in state PARTIAL, one anomaly of type payfit_company_unreachable'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-sources-partial-failure] [rule-evp-payfit-alerts] the company that answers is copied and exhaustive; the company in failure keeps its previous data, is not exhaustive and raises no disappearance
+    alert; the anomaly names the company without secret'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-sources-partial-failure] [rule-evp-sources-failure-state] a company failing in the middle of its pages copies nothing of itself: its previous data stay, the others are copied'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-sources-timeouts] [rule-evp-sources-partial-failure] a company whose server never answers is given up after the 30 second delay of the call; the other company is copied (PARTIAL)'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-half-day-mapping][D-0006] dossier to enter starting in the afternoon and ending in the afternoon, PayFit approved with start middle-of-day and end end-of-day: run SUCCEEDED, dossier
+    DANS_PAYFIT'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-status-admissible] [rule-evp-payfit-proof] an approved absence confirms the dossier; the proof keeps the raw PayFit status'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-pending-cancellation][D-0002] dossier DANS_PAYFIT, absence read again as pending_cancellation: no cancellation alert notification is created and the dossier stays DANS_PAYFIT'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-pending-cancellation] pending_cancellation neither raises a modification nor resolves an open alert; the cancellation alert is born when the status becomes cancelled'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-status-admissible] a proof recorded in the vocabulary of v1 (VALIDATED) read again as approved is not a modification: no alert, no notification'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-alerts] reading the same data again raises nothing new'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-alerts] [rule-evp-payfit-pagination] an absence no longer returned by a complete reading of its company raises a disappearance alert, and a restoration when it is found again'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-type-mapping] a code that designates another type never confirms the dossier'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-type-unmapped] a code absent from the configuration is kept as it is, confirms nothing, and raises one single anomaly per code with the number of absences'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-type-mapping] [rule-evp-sources-error-codes] a configuration file where one PayFit code designates two types is invalid: the reading ends FAILED with sources.not_configured and
+    copies nothing'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-type-mapping] the one-code-one-type rule also holds against the codes already set on the types: a file code already compatible with another type is invalid'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-type-mapping] [rule-evp-sources-error-codes] a configuration file that is not JSON ends the reading FAILED with sources.not_configured, without quoting its content'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-type-mapping] GET /settings shows the code set on the type when there is one, else the first code of the configuration file'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-sources-manual] RH and the superadmin launch the PayFit reading; directrice, RO and administratrice are refused (403), anonymous 401, and PayFit is never called for them'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-sources-refresh-audited] [rule-evp-secrets-never-exposed] each reading launched leaves an audit entry without key'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-payfit.test.ts
+  titre: '[rule-evp-secrets-never-exposed] neither the keys nor the answers of PayFit appear in the run, the source, the anomalies, the audit trail, the notifications, the exports or the server log, after
+    a success and after a failure'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sheets-values-get] [rule-evp-sheets-formatted-values] [rule-evp-sheets-configurable] one GET spreadsheets.values.get on the configured workbook, tab and range, with formatted values
+    by rows'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sheets-service-account][D-0009] the fake token server receives grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer with an RS256 assertion carrying the scope spreadsheets.readonly'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sheets-scope-readonly] [rule-evp-sheets-service-account] the assertion names the service account, is short-lived and asks for the read-only scope and nothing else'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sheets-service-account] the access token is cached until expires_in minus 60 seconds, then obtained again'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-readonly] only reading calls are made: GET on the Sheets API, POST only to the token endpoint of the service account'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-sheets] [rule-evp-sheets-columns] [rule-evp-creche-readonly] the reading builds the crèche referential: code normalised to lower case, SIRET kept as text, directrice and RO recorded,
+    verified'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sheets-header-driven] columns are found by their heading (case ignored, any order, extra columns tolerated), not by their position'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sheets-formatted-values] a response without values is an empty range, not an error: the reading succeeds and creates no crèche'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-error-codes] a 200 answer that is not JSON ends FAILED with sources.unexpected_format'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-ro-gaps-not-overwritten] [rule-evp-sources-sheets] a RO gap read from the table is an anomaly: no account, assignment or group is created, changed or removed'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-sheets-superadmin] a code outside the format and a missing SIRET are reported as anomalies and not turned into crèches'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sheets-values-get] [rule-evp-sources-timeouts] a 429 is waited out and retried: the second attempt succeeds'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-error-codes] [rule-evp-sources-timeouts] a persistent 429 ends FAILED with sources.rate_limited after at most 3 attempts'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-error-codes] [rule-evp-sources-timeouts] a persistent 5xx ends FAILED with sources.unreachable after at most 3 attempts; a transient 5xx is retried'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-timeouts] [rule-evp-sources-error-codes] a server that never answers ends FAILED with sources.unreachable after the 30 second delay of the call'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-failure-state] after a failure the data and the date of the last success are kept; a later success clears the error'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-sheets-superadmin] the Sheets reading is reserved to the superadmin: RH and the other roles are refused (403), anonymous 401, and the workbook is never called'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-sources-no-scheduler] nothing is read by itself: with no human action no call reaches the Sheets API or its token endpoint'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-sheets.test.ts
+  titre: '[rule-evp-secrets-never-exposed] a failing reading never shows the token, the private key, the assertion or the answer of Google in the run, the source, the anomalies, the audit trail, the notifications,
+    the exports or the server log'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-failure-state] [rule-evp-aqoona-mask] every source has the fields of v1 plus lastError and addresses; nothing has been read yet; the Aqoona addresses are listed masked, the others
+    have none; no outgoing call is made'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-aqoona-url-secret] [rule-evp-aqoona-mask] the token and the complete address never appear in the answer of GET /sources, before or after a reading'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-manual] only RH and the superadmin read the state of the sources (403 for the others, 401 anonymous), so the masked addresses are seen by them only'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-failure-state] [rule-evp-sources-error-codes] a failed reading shows ERROR with lastError { code, message 1..200, at }, keeps the figures of the last success and clears the error
+    at the next success'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-run-single] while a reading runs the source is RUNNING with its currentRunId; a second launch of the same source is refused 409 sources.run_in_progress while another source can
+    still be read'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-run-single] [rule-evp-sources-failure-state] a run that has ended has an error message of 1..200 characters only when it failed; an unknown run is 404, a malformed identifier
+    400'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-sheets-superadmin] [rule-evp-sources-refresh-audited] the superadmin chains Sheets, PayFit then Aqoona, in that order; every reading launched is traced without address or key'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-sheets-superadmin] [rule-evp-sources-manual] RH and the others are refused 403 on « Toutes les sources », anonymous 401, and no source is called'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-failure-state] [rule-evp-sources-sheets-superadmin] the first reading that fails stops the chain: PayFit and Aqoona are not read and keep their state'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-partial-failure] [rule-evp-sources-sheets-superadmin] a partial PayFit reading does not stop the chain: Aqoona is read after it'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-failure-state] [rule-evp-sources-sheets-superadmin] a PayFit reading that fails entirely stops the chain before Aqoona'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-error-codes] [rule-evp-aqoona-mask] the OpenAPI document carries the bounds of lastError.message (1..200), addresses[].label (1..100), addresses[].masked (1..300) and the states
+    of the source, PARTIAL included'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-google-flow-redirect][D-0005] no route POST /google-sign-in/credential is part of the contract; the server flow routes are'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-manual] the operations of the sources keep their access: sources:list, sources:refresh and sources:refresh-all are declared on the same routes as in v1 (no operation added)'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-sources-state.test.ts
+  titre: '[rule-evp-sources-no-scheduler] after the processes have been idle, no reading was started and no external call was made'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-unconfigured.test.ts
+  titre: '[rule-evp-google-endpoints-configurable] [rule-evp-login-service-status] without the Google variables the service is unavailable with google_not_configured, even outside production, and no outgoing
+    call is made'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-unconfigured.test.ts
+  titre: '[rule-evp-google-endpoints-configurable] without the Google variables start answers 503 platform.service_unavailable instead of redirecting with placeholder identifiers'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-unconfigured.test.ts
+  titre: '[rule-evp-google-token-verified-server] without the Google variables the callback opens no session: redirection to /connexion?erreur=echec'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-unconfigured.test.ts
+  titre: '[rule-evp-sources-configurable] the Workspace card is UNAVAILABLE without the Google variables and every readable source with an incomplete configuration is UNAVAILABLE, without error and without
+    address'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-unconfigured.test.ts
+  titre: '[rule-evp-sources-configurable][D-0003] EVP_SOURCES_DRIVER=real and PAYFIT_API_KEYS absent: the reading is accepted (202) and ends FAILED with lastError.code sources.not_configured'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-unconfigured.test.ts
+  titre: '[rule-evp-sources-configurable] there is no fallback on the fixtures of v1: with fixtures present, an unconfigured source still ends FAILED sources.not_configured'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-unconfigured.test.ts
+  titre: '[rule-evp-sources-sheets-superadmin] [rule-evp-sources-failure-state] « Toutes les sources » stops at the first reading that fails: Sheets fails not configured, PayFit and Aqoona are not launched'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v2-unconfigured.test.ts
+  titre: '[rule-evp-sources-workspace-scope] Workspace still cannot be refreshed: 404'
+  vu_rouge: '2026-10-11'
+  sur: 4b30c6f
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-google-linked-visible] googleLinked is a boolean on every item, true exactly when the access is bound to a Google account; the identifier itself never leaves the API'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-google-linked-visible] the PATCH and unlink answers carry googleLinked too, and no identifier'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-google-linked-visible] the list keeps its existing guards (401 anonymous, 403 for a directrice and a RO) and only the callers admitted see googleLinked'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-edit] [rule-evp-access-address-keeps-link] RH changes the address of a RO: the answer carries it, base.users follows in the same stroke, the binding, role, active state,
+    crèches and groups are kept'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-edit] the superadmin changes the address of a directrice; ADMINISTRATRICE changes the address of a RO'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-edit] the address is stored in lower case and compared without regard to case'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-audited] the change is traced as a modification of an access, naming the field « adresse » and neither the former nor the new address'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-audited] sending the current address, even in another case, changes nothing: both tables keep the stored value'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-edit] 409 access.email_already_exists for the address of another access (active, removed, other case) and of a platform account outside EVP; nothing written, no audit
+    entry'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-edit] 422 access.invalid_domain outside @micro-stars.fr, look-alike domains included; the access keeps its address'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-edit] an invalid or too long address is refused by the input schema (validation error) and nothing is written'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-edit] the address can be sent with other fields in the same PATCH; they are all applied, and unknown keys stay refused'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-email-lock-order] two simultaneous changes to the same address on two accesses: one 200, one 409 access.email_already_exists, exactly one access ends with the address'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-no-privileged] [rule-evp-access-who-manages] privileged accounts keep 403 access.privileged_account for an address change, even for the superadmin; RH cannot change a directrice
+    (403 access.role_not_manageable)'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-edit] 404 access.not_found for an unknown id, 400 for a malformed id, 403 for a directrice or a RO, 401 anonymous'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-address-keeps-link] the sessions already open stay valid after an address change (they carry the identifier of the account)'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-google-unlink] [rule-evp-access-unlink-who] RH unlinks a RO: 200 with the access and googleLinked false, google_sub null, nothing else changed'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-unlink-who] ADMINISTRATRICE unlinks a RO; the superadmin unlinks a RO and a directrice; RH is refused on a directrice (403 access.role_not_manageable) and the binding stays'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-unlink-audited] each unlink is traced in the same stroke: object « Accès », summary « Liaison Google levée », author = the caller, neither the Google identifier nor any address'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-unlink-needs-link] unlinking an access that is not bound answers 409 access.google_not_linked, writes nothing and leaves no audit entry; a second unlink is refused the same way'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-unlink-needs-link] two simultaneous unlinks of the same access: one 200, one 409 access.google_not_linked, exactly one audit entry'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-privileged-google-fix] [rule-evp-access-no-privileged] RH, ADMINISTRATRICE and SUPERADMIN accesses cannot be unlinked, the superadmin on his own access included: 403 access.privileged_account,
+    binding unchanged, no audit entry'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-privileged-google-fix][D-0012] superadmin on a RH access bound to a Google account: 403 access.privileged_account, binding unchanged'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-privileged-google-fix] the checks run in the order of PATCH: a privileged or out-of-reach access is refused 403 even when it is not bound (never 409)'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-google-unlink] an inactive access can be unlinked like it can be modified'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-google-unlink] 404 access.not_found for an unknown id, 400 for a malformed id, 401 anonymous, 403 directrice and RO callers; no write, no audit entry'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-unlink-session][D-0011] GET /profile with a session opened before the unlink answers 401 security.invalid_token once the access is unlinked'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-unlink-session] the cut applies to every authenticated route, and only to the unlinked access: other accesses keep their sessions'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-unlink-session] a refused unlink (403, 404, 409) cuts nothing: the session stays valid'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-access.test.ts
+  titre: '[rule-evp-access-unlink-session] only the unlink cuts sessions: an address change keeps them valid, a removal keeps its existing answer (403 access refused, not 401)'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-declare-contracts-not-archived] [rule-evp-declare-contracts-status] an ARCHIVED contract is not offered, ACTIVE and PENDING ones are'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-declare-contracts-not-archived] a person who moved from one crèche to the other (one archived contract, one active) appears once, with her active contract only'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-declare-contracts-not-archived] the search never reaches an archived contract'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-declare-contracts-status] the filter applies before the limit of 20 and before the search: 25 archived contracts that sort first do not hide the one active contract'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-declare-contracts-list-only] only the list changes: a declaration on an archived contract is still accepted by POST /absences, and a dossier already on it stays readable'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-declare-contracts-status] [rule-evp-siret-shared-contracts-flag] a crèche alone on its SIRET gets every active and upcoming contract of its company and planningRestricted false'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-contracts][D-0013] code = the second crèche of the SIRET, planning of Camille attached to the first only: 200, items empty for search=Camille'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-contracts] [rule-evp-siret-shared-contracts-flag] a person seen only at the planning of the first crèche is offered there and not at the second; planningRestricted is true
+    on both'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-contracts] a person seen at the planning of both crèches is offered to both'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-contracts-visible] a person seen at no planning of the SIRET (long leave, recent hire) is offered to each crèche of the SIRET, never to none'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-contracts-visible] Aqoona never read: every active and upcoming contract of the company is offered to each of the two crèches, planningRestricted true'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-contracts] a planning attached to a crèche of another SIRET (another company, homonym) has no effect on the list of the shared crèches'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-contracts] the exclusion applies before the search and before the limit of 20: 20 people seen only elsewhere do not hide the 21st'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-contracts-flag] planningRestricted does not depend on the last Aqoona reading, and a non-verified crèche on the same SIRET does not count as sharing'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-one-company] [rule-evp-siret-shared-contracts-flag] crèches sharing a SIRET without any PayFit company: items empty and planningRestricted present (true); a lone crèche without
+    company: items empty, planningRestricted false'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-creches] GET /creches lists two crèches of the same SIRET as two distinct elements, each with its own code, directrice and ROs; sharing is no anomaly'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-creches] the Sheets table can carry two crèches with the same SIRET: reading it keeps both, verified, each with its own code and perimeter, and reports no anomaly about
+    the sharing'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-creche-contract-match] POST /absences accepts a contract of the shared company for each crèche of the SIRET, even for a person the list does not offer there; a contract of another company
+    is 409 absences.creche_contract_mismatch'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-contracts.test.ts
+  titre: '[rule-evp-siret-shared-contracts] the route keeps its guards: 401 anonymous, 403 ADMINISTRATRICE, 404 for a crèche outside the perimeter or unknown (same answer)'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-identity] case 1: bound sub, address of the token equal to the registered one (without regard to case), admissible access: the 8 hour session opens'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-email-mismatch] [rule-evp-login-mismatch-no-write] case 2: bound sub, another address, admissible access: no session, erreur=adresse_modifiee, nothing written (account, user,
+    binding, audit)'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-login-mismatch-no-address] neither the registered address, nor the one of the token, nor the sub is in the redirection of the two new refusals'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-login-single-denial] [rule-evp-login-mismatch-admissible-only] case 3: bound sub, access not admissible (inactive, removed, without crèche): erreur=non_autorise whatever the address,
+    the same redirection as an unknown address'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-binding] [rule-evp-google-sign-in-audit] case 4: unknown sub, registered address, unbound admissible access: the sub is bound, the session opens, one audit entry « Liaison
+    Google enregistrée » without the sub'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-recreated][D-0008] case 5: access bound to S1, valid token of the same address with sub S2: 302 to /connexion?erreur=compte_recree, no session cookie, google_sub unchanged,
+    nothing written'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-recreated] [rule-evp-login-mismatch-admissible-only] case 5 reveals nothing about a non admissible access: a bound but inactive access gets non_autorise for another sub'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-login-single-denial] case 6: unknown sub, registered address, access not admissible: erreur=non_autorise and no binding'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-login-single-denial] case 7: unknown sub, unknown address: erreur=non_autorise'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-email-mismatch] the refusals of the token checks of v2 are unchanged: signature, audience, hosted domain, unverified address'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-address-fix] [rule-evp-access-address-keeps-link] the manager updates the address of the access: the same sub with the new address then signs in, the binding is kept, the
+    old address no longer matches'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-google-sub-address-fix] after the fix, the unbound-address path is closed to everyone else: the new address with another sub is compte_recree, the former address is unknown'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-access-google-rebind] after the unlink, the next valid sign-in of the address binds the new sub and opens the session; the action itself creates no binding'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-access-google-rebind] after the unlink, the old Google account is not privileged: whoever signs in first with the address is bound (the former sub included)'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-access-unlink-session][D-0011] GET /profile with the session of the access opened before the unlink: 401 security.invalid_token'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-access-unlink-session] the person signs in again: the new session (opened after the unlink) is valid, the old one stays cut'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-access-unlink-session] the sessions of the other accesses are untouched, an address change and a refused unlink cut nothing'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-google-sign-in.test.ts
+  titre: '[rule-evp-login-mismatch-no-address] [rule-evp-secrets-never-exposed] neither the sub nor an address of the refusals ends in the audit trail or in the server log'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-transient-key] [rule-evp-aqoona-nir-over-name] a NIR that matches one collaborator of the company wins even if the names differ; the volume « Rapprochés par NIR » counts those
+    rows and « Matricule écarté » no longer exists'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-fallback-name] without NIR, or when the NIR matches nobody, the match is made by first and last name as before; a registration number of another length is treated as absent'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-format] spaces, dots and dashes are ignored, 2A/2B stand for the department digits, and 15 characters are compared; 14 digits (SIRET shape) or any other length is not a NIR'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-scope-company] a NIR carried only by a collaborator of another company does not count: the row falls back to the names inside the company of its crèche, and stays unmatched
+    when the names designate nobody'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-ambiguous][D-0014] a NIR carried by two distinct collaborators of the company, names unique: the slot is stored without employee_id and the anomaly « Planning non rattaché
+    » says « Rattachement par NIR ambigu »'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-ambiguous] one collaborator carrying two contracts and one NIR is one person: the row is matched, with neither ambiguity nor anomaly'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-unavailable] when the NIR of a company cannot be read, its rows are matched by names and the anomaly « Rapprochement par NIR indisponible » names the SIRET; the reading is
+    neither FAILED nor PARTIAL for that reason'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-unavailable] [rule-evp-aqoona-nir-lazy] the unavailability is reported only for the companies that have rows with a NIR; another company keeps matching by NIR'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] [rule-evp-secrets-never-exposed] no NIR (nor its spaced form, nor its first 13 digits) appears in any table of the schema, any answer, export, audit entry, notification,
+    anomaly or in the server log — matched, unmatched, ambiguous and unavailable cases together'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] the PayFit reading never copies the NIR of a collaborator into payfit_employees, even when PayFit delivers it'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] the table of plannings has no column that could carry a NIR, a digest or a fragment of it'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-multi-siret-same-day] [rule-evp-employee-multi-company] a person in two establishments of two SIRET the same day, same hours included: two series, each attached to the crèche
+    of its establishment and to the collaborator of its own company; no anomaly'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-employee-multi-company] [rule-evp-aqoona-nir-scope-company] one person carrying the same NIR in two companies (a collaborator in each): the rows of each establishment attach to the collaborator
+    of its own company, none is ambiguous'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-employee-multi-company] two homonymous collaborators of two companies are never merged by name: the contracts offered by each crèche stay those of its own company'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-dedupe] two identical rows (same person, establishment, day, hours) are stored once and counted once; a row that differs by its hours is another slot'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-dedupe] [rule-evp-aqoona-multi-siret-same-day] the same hours the same day in two establishments, of one SIRET or of two, are two rows: the establishment is part of the key'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-nir-siret.test.ts
+  titre: '[rule-evp-aqoona-nir-transient-key] the reading by NIR is a reading: it creates no dossier, no notification and changes no existing dossier'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-read-pros] [rule-evp-aqoona-window-params] [rule-evp-aqoona-get-only] one single GET: dateBegin = D-28 and dateEnd = D+35 (Paris, YYYY-MM-DD) replace the stale values of the configured
+    address, securityCheck and the foreign parameter are kept, nothing else is added'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-window-params] every new reading asks again with the window of the day, and « Lire maintenant » twice makes two requests, one per reading'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-get-only] a redirection is not followed: the target is never requested and the reading reports the address unreachable'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-mask] [rule-evp-aqoona-url-secret] GET /sources shows the address by its label and masked after the path; neither the securityCheck, nor the completed address with its dates is
+    visible anywhere after a reading or a failed reading'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-sources-readonly] only GET requests reach the address; a failing address keeps the plannings of the last success'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-mapping-final] api/config/aqoona-mapping.json is the final « Pros » mapping of the request'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-root-array] [rule-evp-aqoona-fields] the answer is a JSON array at the root, one row per slot: the fields are read under their « Pros » names'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-unexpected-format] [rule-evp-aqoona-root-array] an answer that is not an array at the root, or whose majority of rows are unusable, is sources.unexpected_format and keeps the
+    plannings of the last success'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-mapping-final] a mapping without « type » gives every slot NON_PRECISE; a mapping without « slotTypes » ranks any non empty type in AUTRE (the mapping is configuration)'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-mapping-final] a mapping that does not follow its schema ends the reading FAILED with sources.not_configured, without quoting its content'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-slots] [rule-evp-sources-no-auto-absence] the contiguous slots of a day are stored one by one, never merged; no presence or absence is deduced, no dossier or notification is created'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-window] the window runs from D-28 to D+35: rows outside are ignored, the bounds are kept; the window of GET /sources is the same'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-dedupe] two identical rows are stored and counted once; a different type or different hours is another slot'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-dedupe] a set of rows accepted in memory is never refused by the database: identical rows of an establishment that matches no crèche collapse into one without failing the reading'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-multi-siret-same-day] the same person in two establishments of two SIRET the same day, same hours: two series, one per crèche and per company, no anomaly'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-slot-type-normalised] every spelling of the request is ranked: Garde, garde, GARDE, Garde enfant, Terrain → GARDE; PAUSE, Pause, pauses → PAUSE; Menage, MENAGE, Ménage, Entretien
+    → MENAGE; empty or absent → NON_PRECISE; unknown → AUTRE'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-slot-type-normalised] the comparison ignores case, accents and the plural'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-slot-type-anomalies] one anomaly per distinct unknown type (counting every spelling together) and one for all the rows without type; they block neither the storage nor the matching'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-no-trace-in-types] a slot type that looks like a NIR is ranked in AUTRE and its anomaly says « Type illisible » instead of quoting it'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-text-normalised] the example of the request: stray spaces, case and accents are ignored for the person and the establishment; person_ref is « Prénom NOM » cleaned'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-text-normalised] « Micro-Stars », « MicroStars », « Micro Stars » and a spelling with stray spaces are the same establishment'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-etab-unique] an establishment that matches two verified crèches, an unknown one or only an unverified crèche is stored without crèche and reported « Planning non rattaché »'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-person-ref] person_ref is always « Prénom NOM », never the value of user_matricule; a registration number that is not a NIR is kept nowhere'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-lazy] without any NIR in the window, PayFit is not called at all'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-lazy] [rule-evp-sources-readonly] with NIR rows for one company only, only that company is queried, in read only; the PayFit tables are untouched'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-transient-key] [rule-evp-aqoona-nir-over-name] with the NIR delivered by PayFit (field name per the plan of the module: hypothesis, see the coverage file), a NIR that matches
+    one collaborator wins over differing names; the volume « Rapprochés par NIR » counts it'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-fallback-name] a NIR that matches nobody falls back to the names'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-ambiguous][D-0014] a NIR carried by two distinct collaborators of the company: slot stored without employee_id, anomaly « Rattachement par NIR ambigu », no fallback on the
+    names'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-ambiguous] one collaborator carrying two contracts and one NIR is one person: matched normally'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-unavailable] scope missing (403), company unreachable (500) or key absent: the rows of that company fall back to the names, the anomaly « Rapprochement par NIR indisponible
+    » names the SIRET, the reading stays SUCCEEDED and not PARTIAL'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-aqoona.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] [rule-evp-secrets-never-exposed] no NIR in any table, answer, export, audit entry, notification, anomaly, run or server log — also when PayFit delivers it, when
+    a slot type looks like a NIR and when the reading fails with an upstream message echoing it'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-many-keys] forty keys are read, one company at a time, with no limit of the application: forty companies, all their collaborators and contracts, a complete reading'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-many-keys] [rule-evp-sources-partial-failure] one company of the forty failing is a partial reading: the thirty-nine others are read, the failure is an anomaly'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-payfit.test.ts
+  titre: '[rule-evp-payfit-many-keys] the companies are read one at a time: requests of two companies never overlap'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v3-sources-payfit.test.ts
+  titre: '[rule-evp-employee-multi-company] a person who works on two SIRET is one collaborator per company, never merged by name: two employees, two contracts, each under its own company'
+  vu_rouge: '2026-10-12'
+  sur: e1990fd
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-route] [rule-evp-matching-rates-same-rights] RH and SUPERADMIN read the rates: 200 with exactly the fields of the contract'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-same-rights] directrice, RO and ADMINISTRATRICE get 403 with a body { status, code, message } and no data; anonymous and invalid token get 401'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-route] only GET exists on the path; it does not shadow the neighbouring routes of the sources'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-live] [rule-evp-sources-readonly] reading the rates writes nothing: no audit entry, no run, no notification, no new table'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-route] Aqoona never read successfully: available false, lastReadAt and window null, no item — even if slots are stored'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-route] read with success but no slot in the window: available true and no item; lastReadAt and the window are those of GET /sources'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-unknown-mode][D-0016] GET /sources/aqoona/matching-rates with a slot of unknown mode stored among slots of mode NIR and NOM: 200, available false, items empty — no partial
+    rate, no fourth part'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-unknown-mode] the answer keeps the last reading and the window of GET /sources when it is unavailable because of an unknown mode'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-unknown-mode] a slot written before the column existed (default value) is of unknown mode; the next complete reading replaces it and the rates come back'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-three-parts] [rule-evp-matching-rates-company] [rule-evp-matching-rates-consistency] one line per company with name and SIRET of PayFit, each slot in exactly one part,
+    a last line without company; the totals equal « Plannings lus », the NIR counts equal « Rapprochés par NIR », NIR + names equal « Plannings rattachés »'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-three-parts] an ambiguous NIR is unmatched, a wrong key falls back to the names, a company whose NIR cannot be read falls back to the names: each slot is in one part only'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-live] [rule-evp-matching-rates-consistency] the rates follow the stored slots at once and a new reading replaces them: the rates always describe the last state'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-percent] the percentage is round(100 × count / total, 1) with exact counts: one third is 33.3 three times, 1/6 is 16.7, 5/6 is 83.3, 1/8 is 12.5, all by one part is 100'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-company] [rule-evp-matching-rates-no-company] companies are sorted by name in French order (case and accents ignored), then by identifier; the line without company is
+    last whatever its name would give; only companies with a slot are listed'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-no-company] slots without company and slots of a company that PayFit no longer knows are in the same last line « Sans société identifiée »'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-no-company][D-0015] GET /sources/aqoona/matching-rates with two slots, one from an establishment unknown of the referential and one attached by NIR to a collaborator of
+    Alpha, after a reading of Aqoona: 200, items contains the line of Alpha (total 1, byNir.count 1) and a line companyId null « Sans société identifiée » (total 1, unmatched.count 1)'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-company] two crèches of the same SIRET count for the same company; a person in two companies on the same day is counted in each'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] the column match_method exists, is text, not null, defaults to INCONNU and only accepts NIR, NOM, AUCUN and INCONNU'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] the column of the mode carries no NIR, digest or fragment: after a reading with NIR rows its values are only NIR, NOM or AUCUN, and no other column of the table
+    looks like a NIR'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-no-nir] [rule-evp-nir-key-never-shown] the answer holds only identifiers, SIRET, company names and counts: no NIR (right or wrong key, any form), no first or last name
+    of a collaborator, no secret, no address'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-route] [rule-evp-matching-rates-percent] the OpenAPI document carries the operation and the bounds of SourceAqoonaMatchingRatesDto; the five other operations of the sources
+    keep their path'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-matching-rates.test.ts
+  titre: '[rule-evp-matching-rates-same-rights] the operation answers 401 and 403 in the documented error shape and declares no other error (no input to validate)'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-formula] [rule-evp-nir-key-vectors] [rule-evp-nir-key-invalid-unused] the vectors of the request: 46 is right and 47 is wrong, 2A counts 19 and 2B counts 18, the key of 2B does
+    not fit 2A; a wrong key never serves to match'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-formula] the remainder 0 gives the key 97 (right), the key 00 is always wrong'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] [rule-evp-aqoona-nir-fallback-name] a row with a wrong key is treated as a row without NIR: matched by first and last name, counted by names, never by NIR'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] the same wrong NIR on both sides is not a match: neither side may serve it'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] [rule-evp-aqoona-nir-lazy] a row with a wrong key does not by itself cause the NIR of its company to be read: no unavailability is reported for a company that
+    only has such rows, and it is reported as soon as one row has a right key'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-anomaly-grain] [rule-evp-nir-key-no-failure] one anomaly per distinct person, not per slot, crèche or company; the number of de-duplicated slots is in the detail; the reading
+    is neither PARTIAL nor FAILED and every slot is stored'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-anomaly-without-company][D-0017] a row with a wrong key whose establishment is unknown of the referential: the anomaly « Clé de NIR Aqoona incorrecte » names the person, in addition
+    to « Planning non rattaché »'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-payfit-anomaly-source][D-0018] a collaborator of Alpha carries a NIR with a wrong key in PayFit, another employee has a right NIR in an Aqoona row; PayFit then Aqoona are read:
+    « Clé de NIR PayFit incorrecte » is in the anomalies of Aqoona, never in those of PayFit'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-payfit-anomaly-source] the reading of PayFit alone reads no NIR: no anomaly of key is produced by it, whatever the NIR of its collaborators; only the companies whose NIR are
+    read by Aqoona are checked'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] the collaborator with a wrong key is found only by her names; she makes ambiguous no right NIR carried by another collaborator of the company'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] a collaborator whose NIR is wrong is not designated by that NIR even when an Aqoona row carries exactly her value: nobody is attached by NIR'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-absent-ok] [rule-evp-aqoona-nir-format] a NIR of 13 characters in PayFit (no key to check) is still used, on its 13 first characters, and produces no anomaly'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-payfit-anomaly-source] a collaborator unknown of payfit_employees with a wrong NIR is named « Collaboratrice <identifiant PayFit> »'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-anomaly-grain] [rule-evp-nir-key-no-failure] two collaborators with a wrong key give two anomalies, one each, without making the reading PARTIAL or FAILED'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-payfit-scope-missing-fallback] [rule-evp-payfit-scope-detail] [rule-evp-payfit-scope-checked] a company whose key lacks the scope: its NIR are not used (they may be in the answer), the
+    names are, the anomaly names the SIRET and the scope; the reading is neither FAILED nor PARTIAL'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-payfit-scope-detail] the detail names the scope only when the cause is the scope: an unreadable company keeps the short sentence'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-payfit-scope-fresh] [rule-evp-payfit-scope-missing-fallback] the scope is looked at on every reading: the anomaly is replaced, not accumulated; a scope granted between two readings is
+    seen at the next one and the matching goes back to the NIR; a scope withdrawn is seen as well'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-payfit-scope-coverage][D-0019] Alpha lacks the scope and no Aqoona row of its crèches carries a NIR: the reading of Aqoona gives no « Rapprochement par NIR indisponible » for the SIRET
+    of Alpha'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-payfit-scope-coverage] the check is made for the companies read during the reading of Aqoona only: without any row with a NIR, no company is reported, whatever the state of its key'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-payfit-scope-missing-fallback] [rule-evp-aqoona-nir-unavailable] the volumes of the reading stay those of a normal reading and the PayFit reading is untouched by the missing scope'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] a reading writes NIR, NOM or AUCUN on every slot and never INCONNU: by NIR, by names, unknown person, ambiguous NIR, unknown establishment, wrong key, value
+    that is no NIR'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-matching-method-first-row] two identical slots keep the mode of the first row retained, whatever the order in which they arrive'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] every reading replaces the modes of the previous one'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-nir-key.test.ts
+  titre: '[rule-evp-nir-key-never-shown] [rule-evp-aqoona-nir-never-stored] no NIR with a wrong key (nor any NIR, spaced, in first 13 digits or with 2A/2B) appears in an answer, anomaly, run, volume, export,
+    audit entry, notification, table or in the server log; the anomalies say « incorrecte » and name the person, with no digit that hints at the key'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-checked] [rule-evp-payfit-scope-missing-fallback] [rule-evp-payfit-scope-read-only] a key without the scope: PayFit delivers the NIR but the collaborators are not even requested;
+    the rows are matched by names, the anomaly names the SIRET and the scope, the reading is neither FAILED nor PARTIAL; the introspection is the only POST'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-checked] each company has its own scope: the company with the scope is read and matched by NIR, the other one only by names; one introspection per company and per reading,
+    whatever the number of rows'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-checked] [rule-evp-aqoona-nir-lazy] [rule-evp-nir-key-invalid-unused] without a row whose NIR has a right key, PayFit is not called at all: not even the introspection'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-coverage] a key without the scope for a company that has no Aqoona row with a NIR is not even introspected and produces no anomaly'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-fresh] [rule-evp-payfit-company-id] the scope is introspected at every reading, never served from the cache of the company identifier (filled by a full reading of PayFit):
+    a scope granted or withdrawn is seen at the next reading'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-checked] the company identifier and the scope come from the same answer: a single introspection per company in a reading, with the key as bearer'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-format] the scope is a string of scopes separated by spaces, or an array of strings, compared exactly: all these answers grant the NIR'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-format] an absent, empty or different scope means « scope missing »: no NIR, the anomaly with the scope named; neighbours of the scope do not count (exact comparison, case
+    included)'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-format] [rule-evp-payfit-scope-detail] an inactive token or an introspection refused (401, 403, 429, 5xx) means « company unreadable », not « scope missing »: the short
+    sentence, names used, reading SUCCEEDED and not PARTIAL, collaborators never requested'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-detail] [rule-evp-aqoona-nir-unavailable] one company without the scope, one unreachable, one without key in PAYFIT_API_KEYS: three anomalies with the right sentence each,
+    one SIRET each'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-nir-key-both-sides] [rule-evp-nir-key-payfit-anomaly-source] a collaborator whose NIR has a wrong key is not used: found by her names only, named in the anomalies of Aqoona (SIRET in
+    the detail), never in those of PayFit; she does not make ambiguous the right NIR of another collaborator'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] the same wrong NIR on both sides is not a match; a NIR of 13 characters is still used and makes no anomaly'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-nir-key-payfit-anomaly-source] the full reading of PayFit reads no NIR and flags no key; only the reading of Aqoona checks the companies it reads'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-nir-key-never-shown] [rule-evp-aqoona-nir-never-stored] [rule-evp-secrets-never-exposed] with NIR of right and wrong keys on both sides, a missing scope and an upstream error echoing
+    the key: no NIR, no key, no introspection answer anywhere (answers, tables, anomalies, rates, server log)'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v4-sources-payfit-scope.test.ts
+  titre: '[rule-evp-matching-rates-consistency] [rule-evp-matching-rates-three-parts] the rates describe the reading just made: NIR when the scope allows it, names when it does not'
+  vu_rouge: '2026-10-13'
+  sur: 7caf52f
+- fichier: acceptance-v5-creches-shared-siret.test.ts
+  titre: '[rule-evp-siret-shared-contracts] a collaborator of company A attached by NIR to a slot of the first crèche only is offered there and not at the second; a person seen at no slot is offered to
+    both'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-creches-shared-siret.test.ts
+  titre: '[rule-evp-link-nir-only] [rule-evp-siret-shared-contracts] a slot read with the name of a collaborator but without NIR is not attached to her, so it excludes her from nothing: she is offered to
+    each crèche of the SIRET'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-creches-shared-siret.test.ts
+  titre: '[rule-evp-siret-shared-contracts] [rule-evp-link-one-establishment] a floating employee of company B read in a crèche of company A whose identifier is the same as an employee of company A is never
+    taken for her: the employee of company A is not excluded from the first crèche'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-creches-shared-siret.test.ts
+  titre: '[rule-evp-siret-shared-contracts] [rule-evp-link-network-wide] a floating employee of company A read in a crèche of another SIRET is not excluded from the contracts offered by the crèches sharing
+    the SIRET of her company'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-creches-shared-siret.test.ts
+  titre: '[rule-evp-siret-shared-contracts] a floating employee of company A read in a crèche of company A and in another SIRET: excluded from the other crèche of her SIRET only because of the slot read
+    in a crèche of her SIRET'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-creches-shared-siret.test.ts
+  titre: '[rule-evp-siret-shared-contracts] the route keeps its guards: 401 anonymous, 403 ADMINISTRATRICE, 404 for a crèche outside the perimeter or unknown (same answer)'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-nir-only] [rule-evp-link-unusable-nir] a row with the exact first and last name of a collaborator but no NIR is not attached: no employee, mode AUCUN, cause NIR_ABSENT, nothing
+    counted as attached, and the anomaly gives the cause'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-nir-only] the NIR designates the collaborator whatever the names say: other names with the right NIR are attached, the names of a collaborator with the NIR of another one are attached
+    to the other'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-nir-only] [rule-evp-link-unusable-nir] there is no fallback on the names whatever the reason: no NIR, an ill-formed value, a wrong key, an unknown NIR, an ambiguous NIR — a unique
+    name that designates one collaborator never attaches the row'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-nir-only] « Plannings rattachés » and « Rapprochés par NIR » are always equal, in the run and in GET /sources, with the three labels in their order'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-aqoona-nir-format] spaces, dots and dashes are ignored, 2A stands for the department digits and 15 characters are compared; 14 digits (the shape of a SIRET) or any other length is not
+    a NIR: cause NIR_ABSENT'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-nir-only] a row without name but with a NIR of a collaborator is attached to her (the name is not needed); a row with a NIR of nobody and no name is « Personne non nommée »'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-network-wide] a NIR carried only by a collaborator of another company than the crèche is attached to her: the collaborator is searched in the whole network'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-network-wide] [rule-evp-link-one-establishment] a floating employee (volante): Léa of company A read in a crèche of company B keeps the crèche and the company where she was read,
+    and counts for her reference company A, once'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-network-wide] a company that has no collaborator with a NIR in its own crèche is still found: the collaborator of each company is attached whatever the crèche of the row'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-network-wide] [rule-evp-employee-multi-company] two homonymous collaborators of two companies are never merged by the name: each NIR designates its own collaborator'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-network-wide] [rule-evp-link-one-establishment] two rows with the same NIR in two establishments of two companies attach to the same collaborator, the slots keep their own company
+    and crèche'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-causes] [rule-evp-link-nir-two-companies] one collaborator carrying two contracts and one NIR is one person: the row is attached, with neither ambiguity nor anomaly'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-causes] NIR_ABSENT: no NIR, or a value that does not have the shape of a NIR of 15 characters'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-causes] NIR_KEY_INVALID: a NIR whose check key is wrong (also the key 00), in any written form'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-causes] NIR_UNKNOWN: a NIR of right key that no collaborator of the network carries, all the companies being read'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-causes] NIR_AMBIGUOUS: a NIR of right key carried by two collaborators of the same company; none is attached, the names are not used to choose between them'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-causes] [rule-evp-link-nir-two-companies] NIR_AMBIGUOUS also for a NIR carried by one collaborator of company A and one of company B, whatever the crèche of the row'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-causes] [rule-evp-link-incomplete-read] PAYFIT_INCOMPLETE: a NIR of right key that nobody readable carries while a company of the network lacks the scope, or cannot be read'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-causes] the order of the causes: absent or ill-formed, then wrong key, then ambiguous, then incomplete read, then unknown — one cause per row'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-incomplete-read] a NIR found among the readable companies is attached even when another company of the network cannot be read'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-unusable-nir] [rule-evp-nir-key-never-shown] the anomaly « Planning non rattaché » gives the cause and the crèche and never a NIR, a fragment or a digit'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-causes] [rule-evp-unlinked-list] the five causes are exactly the five values of the list, each with its French label'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-no-identity] a row without name and without NIR is an anomaly « Ligne Aqoona sans nom ni NIR »: the slot is kept, not attached, without cause; it is neither in the list nor in the
+    rates; the reading stays SUCCEEDED'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-no-identity] the count of the detail is the number of such rows; a row with a name but no NIR, or a NIR but no name, is not a row without identity'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-unknown-creche] a row whose NIR designates a collaborator is attached even if its establishment is unknown of the referential: the slot keeps no crèche, and no anomaly speaks of
+    the establishment'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-unknown-creche] [rule-evp-unlinked-list] a row not attached in an unknown establishment keeps the establishment as it was read: in the stored slot, in the detail of the anomaly
+    and in the crèches of the list (no NIR)'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-nir-two-companies][D-0020] GET /sources/aqoona/unlinked-people with the same NIR (right key) carried by a collaborator of Alpha and one of Beta, a row of Aqoona with this NIR in
+    a crèche of Alpha, PayFit then Aqoona read: 200, the person is there with the cause NIR_AMBIGUOUS, and GET /sources/aqoona/matching-rates attaches nobody (linked.count 0 for Alpha and for Beta)'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-incomplete-read][D-0021] GET /sources/aqoona/unlinked-people with Alpha in nirScopeMissing and a row of Aqoona whose NIR (right key) is carried by no readable collaborator, Aqoona
+    read: 200, the person is there with the cause PAYFIT_INCOMPLETE'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-unknown-creche][D-0022] GET /sources/aqoona/anomalies with a row whose NIR (right key) is that of a collaborator of Alpha and whose establishment is absent from the referential,
+    PayFit then Aqoona read: 200, no « Planning non rattaché » and no « Établissement Aqoona inconnu »; GET /sources/aqoona/matching-rates: linked.count 1 for Alpha'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-person-both-states][D-0023] GET /sources/aqoona/unlinked-people with two rows « Camille DURAND » (one with the NIR of a collaborator, one without NIR in another crèche of the same
+    company), PayFit then Aqoona read: 200, « Camille DURAND » is there with NIR_ABSENT; GET /sources/aqoona/matching-rates: linked.count 1 and unlinked.count 1 for the company'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-employee-not-read][D-0024] GET /sources/aqoona/unlinked-people with a collaborator of Alpha present in the live NIR of PayFit but absent from the stored collaborators, a row with
+    her NIR, Aqoona read without any PayFit reading: 200, the person is there with PAYFIT_INCOMPLETE; GET /sources/aqoona/matching-rates: linked.count 0'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-employee-not-read] after a reading of PayFit, the next reading of Aqoona attaches the collaborator who was PAYFIT_INCOMPLETE before; no identifier is invented for a collaborator
+    without record'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-employee-not-read] [rule-evp-link-nir-two-companies] two live carriers of a NIR, one of them absent from the stored collaborators: the NIR is ambiguous (the count is made on the
+    live table, not on the stored collaborators)'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-person-both-states] the attachment is decided row by row: a person attached by one row and not by another is counted in both states, and the list shows the row without NIR with
+    the crèche of that row'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] a collaborator of PayFit whose NIR has a wrong key is removed from the table: nobody is attached to her by that value, she is not found by her name, and she does
+    not make ambiguous the right NIR of another collaborator'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] the same wrong NIR on both sides is not a match: neither side may serve it'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-nir-key-absent-ok] [rule-evp-aqoona-nir-format] a NIR of 13 characters in PayFit (no key to check) is used on its 13 first characters, with no anomaly'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-network-read] [rule-evp-nir-key-payfit-anomaly-source] the NIR of every company of the network are read as soon as one row has a NIR of right key: a wrong key of company B is flagged
+    although the row is in a crèche of company A; without any such row nothing is read, nothing is flagged'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-nir-key-invalid-unused] the detail of « Clé de NIR Aqoona incorrecte » says that the row is not attached, and no longer that the names are used'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-company-named-in-anomalies] [rule-evp-link-network-read] « Rapprochement par NIR indisponible » names the company (name and SIRET), for a missing scope and for an unreadable company,
+    even if no row is in a crèche of that company; the reading is neither FAILED nor PARTIAL'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-aqoona-nir-unavailable] [rule-evp-link-network-read] the network is read only if at least one row has a NIR of right key: without such a row, no company is reported whatever the state
+    of its key'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-payfit-scope-every-read] [rule-evp-aqoona-nir-unavailable] the anomaly is replaced at each reading, not accumulated: a scope granted between two readings is seen at the next one and
+    the row is attached; a scope withdrawn is seen as well'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-network-read] a company the fixture knows but PayFit never recorded (absent from payfit_companies) is not reported by name, but makes the NIR not found « lecture incomplète »'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-link-network-read] an unreadable network (payfit.json unreadable): every row with a NIR of right key is PAYFIT_INCOMPLETE, no company is reported, the reading stays SUCCEEDED'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-matching-method-first-row] two identical slots keep the state of the first row retained (attached by NIR, or not attached with its cause), whatever the order in which they arrive'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-aqoona-dedupe] [rule-evp-aqoona-multi-siret-same-day] the same hours the same day in two establishments of two SIRET are two slots, each keeps its crèche and its company, and the person
+    is attached to her own reference company'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] the columns employee_company_id, unlinked_cause and creche_label exist (text, nullable); the checks refuse an unknown cause and an employee without company;
+    no column can carry a NIR, a digest or a fragment'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] after a reading: employee_id and employee_company_id are both set or both null; the mode is only NIR or AUCUN (never NOM, never INCONNU); a cause is written
+    only for a row not attached that has a name or a NIR'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-aqoona-nir-never-stored] aqoona_mismatches holds one line per slot not attached with the label of the cause, never a NIR'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-linking.test.ts
+  titre: '[rule-evp-unlinked-list-no-nir] [rule-evp-nir-key-never-shown] [rule-evp-aqoona-nir-transient-key] no NIR (nor its spaced form, nor its 13 first digits) appears in any answer, anomaly, run, volume,
+    export, audit entry, notification, table, rates, list or in the server log — attached and not attached rows of every cause'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-every-read] [rule-evp-company-named-in-anomalies] a key without the scope « collaborators:social-security:read » is reported in the anomalies of PayFit for its company,
+    named with its name and its SIRET; the other company is not'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-no-failure] [rule-evp-payfit-scope-every-read] a missing scope does not make the reading PARTIAL or FAILED: the source is up to date and the collaborators and contracts
+    of every company are copied'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-every-read] [rule-evp-payfit-scope-one-per-key] at most one anomaly of scope per company and per reading: the next reading replaces it, it is never accumulated'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-every-read] the scope is looked at on every reading: a key corrected between two readings is no longer reported; a key whose scope is withdrawn is reported at the next reading'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-every-read] the whole list of the keys to correct is available after one reading of PayFit, whatever the rows of Aqoona: every key without the scope is reported, with no
+    Aqoona reading at all'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-every-read] the chain « Toutes les sources » reads PayFit and reports the keys without the scope as a single reading does'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-company-named-in-anomalies] a company that PayFit has never recorded is « Société sans nom connu (SIRET …) »'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-company-named-in-anomalies] the name of the company comes from what PayFit sent, else from what was recorded: renamed in PayFit, the anomaly follows the new name at the next reading'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-introspection-failed] [rule-evp-company-named-in-anomalies] an introspection that fails is reported for its company, with the cause in words and without guessing the scope:
+    no « Portée PayFit manquante » for that company'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-introspection-failed] [rule-evp-payfit-scope-one-per-key] a key whose introspection fails and which is also listed without the scope gives one anomaly, the failure: nothing
+    is guessed about its scope'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-no-failure] a failed introspection stops neither the reading of the other companies nor the reading itself: SUCCEEDED, source up to date, the data of the company whose key
+    is fine is copied; a missing scope and a failure coexist for two companies'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-introspection-failed] the failure disappears at the next reading when the introspection works again'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-no-nir-read][D-0018] the reading of PayFit reads no NIR: whatever the NIR of the collaborators in PayFit, it produces no anomaly of key, no « Planning non rattaché », and
+    no NIR in any answer, table or log'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-every-read] [rule-evp-company-named-in-anomalies] the anomalies of scope hold the name and the SIRET and nothing else that looks like a number: no NIR, no key, no address'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-company-named-in-anomalies] [rule-evp-payfit-scope-every-read] a key without the scope is named the same way on both sides: « Portée PayFit manquante » (reading of PayFit) and « Rapprochement
+    par NIR indisponible » (reading of Aqoona) both carry « Nom (SIRET …) »; the two sources are independent'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-payfit-scope.test.ts
+  titre: '[rule-evp-payfit-scope-no-failure] the anomalies of scope are anomalies of a reading: they create no notification and no dossier'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-route] [rule-evp-matching-rates-same-rights] [rule-evp-unlinked-list-same-rights] RH and SUPERADMIN read the rates and the list: 200 with exactly the fields of the contract'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-same-rights] [rule-evp-unlinked-list-same-rights] directrice, RO and ADMINISTRATRICE get 403 with a body { status, code, message } and no data; anonymous and invalid token
+    get 401 — on both routes'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list-same-rights] [rule-evp-unlinked-list-paging] the access is decided before the parameters: an invalid size is 401 without session and 403 for a role without the right, 400
+    only for RH and SUPERADMIN'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list] [rule-evp-matching-rates-route] only GET exists on both paths; they do not shadow the neighbouring routes of the sources (reading is awaited: the test leaves no background
+    reading)'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-live] [rule-evp-unlinked-list-no-nir] [rule-evp-sources-readonly] reading the rates and the list writes nothing: no audit entry, no run, no notification, no new table'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-route] [rule-evp-unlinked-list] Aqoona never read successfully: available false, lastReadAt and window null, no item, total 0 — even if slots are stored'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-route] [rule-evp-unlinked-list] read with success but no person: available true, no item, total 0; lastReadAt and the window are those of GET /sources'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-unknown-mode] a slot written before v5 (mode NOM, INCONNU or the default value) among slots of the new modes: both routes answer 200, available false, no item, total 0
+    — no partial rate, no partial list; the last reading and the window are kept'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-unknown-mode] the next complete reading of Aqoona replaces the slots written before v5: the rates and the list come back'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-people] [rule-evp-matching-rates-company-of-person] persons, not slots: an attached person counts once whatever her slots and crèches, for her reference company; a person
+    not linked counts once per company of the crèches where she was read'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-people] [rule-evp-matching-rates-company-of-person] an attached person counts for the company of her reference even when every slot was read in another company; no line
+    for a company that has no person'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-percent] the percentage is round(100 × count / total, 1) with exact counts: 1/3 is 33.3, 2/3 is 66.7, 1/6 is 16.7, 5/6 is 83.3, 1/8 is 12.5, all in one part is 100; total
+    is linked + unlinked'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-no-company] [rule-evp-matching-rates-company-of-person] persons whose company is unknown (crèche unknown, company absent from PayFit, reference company absent from PayFit)
+    are in the same last line « Sans société identifiée », with no identifier of the vanished company'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-no-company][D-0015] GET /sources/aqoona/matching-rates with two rows, one from an establishment unknown of the referential (no NIR) and one attached by NIR to a collaborator
+    of Alpha, after a reading of Aqoona: 200, items contains the line of Alpha (total 1, linked.count 1) and a line companyId null « Sans société identifiée » (total 1, unlinked.count 1)'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-company-of-person] [rule-evp-matching-rates-no-company] companies are sorted by name in French order (case and accents ignored), then by identifier; the line without company
+    is last whatever its name would give; only companies with a person are listed'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-live] the rates follow the stored slots at once, and a new reading replaces them'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-people] persons without any name are one person by company and by cause in the list; in the rates they count once per company'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-consistency] the sum of linked.count is the number of distinct attached employees, « Plannings rattachés » equals « Rapprochés par NIR » and counts only slots of attached
+    persons, and every person counted as not linked is in the list'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list] [rule-evp-unlinked-list-grain] one entry per person and per cause, with the crèches where she was read (name of the referential, sorted, without duplicates), sorted by
+    name in French order then by cause; attached persons are not listed'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list-grain] the name is « Prénom NOM » as read in Aqoona, from the first row retained; the same person written differently (case, accents, spaces) is one entry'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list] the crèches of a person: the establishment as read in Aqoona when it is unknown of the referential, an empty list when there is none; at most 50, the first 50 in order'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list-paging] from and size: default 25, sizes 10 and 50, pages are disjoint and complete in the order of the list, from beyond the total gives no item and the exact total'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list-paging] parameters out of bounds are 400 with the validation body: size 0, 30, 100 or not a number; from negative, not an integer or above 2147483647'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list-grain] the order is by name, then by cause: a person with two causes has her entries next to each other, NIR_ABSENT first'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-no-nir] the rates hold only identifiers, SIRET, company names and counts: no NIR (right or wrong key, any form), no name of a person, no secret, no address'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list-no-nir] the list names the person and never a NIR: no NIR, no fragment, no digit that hints at the key, no expected key, no PayFit identifier, no secret, no address; only
+    the keys of the contract'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-people] [rule-evp-matching-rates-percent] the OpenAPI document carries the new shape of SourceAqoonaMatchingRatesDto with the bounds of the request (linked / unlinked,
+    no byNir / byName / unmatched)'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list] [rule-evp-unlinked-list-paging] the OpenAPI document carries the new operation GET /sources/aqoona/unlinked-people with SourceAqoonaUnlinkedPeopleDto and the bounds of
+    the request; the paths of the sources are the six known plus this one'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-unlinked-list-same-rights] [rule-evp-matching-rates-same-rights] the operations answer 401 and 403 in the documented error shape'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-people-rates.test.ts
+  titre: '[rule-evp-matching-rates-people] the rates and the list use the same causes as the anomalies: the cause of a person of the list is the one of the anomaly « Planning non rattaché »'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-payfit-scope-every-read] [rule-evp-payfit-scope-one-per-key] [rule-evp-payfit-scope-read-only] every reading introspects every key exactly once, with the key as bearer, even when the
+    identifier of the company is cached; the introspection is the only POST'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-payfit-scope-every-read] [rule-evp-company-named-in-anomalies] a key without the scope is reported for its company, named with its name and SIRET, and the reading goes on: SUCCEEDED,
+    the data of both companies is copied; the scope is never served from the cache of the identifiers'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-payfit-scope-format] the scope is a string of scopes separated by spaces, or an array of strings, compared exactly: these answers grant it; an absent, empty, blank, null, empty array
+    or neighbouring scope is « scope missing » (an active token answered)'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-payfit-scope-introspection-failed] an introspection that fails is reported for its company with the cause in words, and nothing is guessed about the scope; the other company is checked
+    on its own and the reading of PayFit is not FAILED'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-payfit-scope-no-failure] [rule-evp-payfit-scope-introspection-failed] a key without the scope whose company data cannot be read after the introspection is still reported; the answer
+    of the upstream never reaches the anomalies (no key, no address, no echo)'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-payfit-scope-no-nir-read][D-0018] the reading of PayFit reads no NIR even when PayFit delivers them: nothing stored, nothing shown, no anomaly of key, no endpoint other than the collaborators,
+    contracts, absences and the company'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-link-network-read] [rule-evp-link-network-wide] one row with a NIR of right key makes the NIR of every company of the network be read (both keys introspected, both collaborators lists
+    requested), and the NIR of a collaborator of another company than the crèche attaches the row to her'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-link-network-read] [rule-evp-aqoona-nir-transient-key] without a row whose NIR has a right key, PayFit is not called at all, not even the introspection; nothing is reported about the
+    keys'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-link-incomplete-read] [rule-evp-company-named-in-anomalies] a company without the scope: its collaborators are not requested, a NIR found nowhere else is PAYFIT_INCOMPLETE, the anomaly
+    names the company with its scope; a NIR found in the other company is attached; the reading is SUCCEEDED'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-aqoona-nir-unavailable] [rule-evp-company-named-in-anomalies] an introspection that fails (401, 403, 429, 5xx, inactive key) makes the company unavailable: the short sentence, the company
+    named, even when no row of Aqoona is in its crèches'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-link-network-read] [rule-evp-link-incomplete-read] an unreadable network (every key refused): every row with a NIR of right key is PAYFIT_INCOMPLETE, both companies are named, the reading
+    is SUCCEEDED'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-link-network-read] [rule-evp-nir-key-payfit-anomaly-source] the whole network is checked for wrong keys: a collaborator of company B with a NIR of wrong key is reported although the
+    only row with a right key is in a crèche of company A'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-link-nir-two-companies][rule-evp-link-network-wide] the same NIR carried by a collaborator of each company: ambiguous, nobody is attached, whatever the crèche of the row'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-link-employee-not-read][D-0024] a collaborator found in PayFit live but never recorded by a full reading of PayFit is not attached (PAYFIT_INCOMPLETE); after the full reading of PayFit
+    the next reading of Aqoona attaches her'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-payfit-scope-every-read] the reading of Aqoona introspects the keys again at each reading too: a scope withdrawn between two readings is seen at the next one and the row is no longer
+    attached'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0
+- fichier: acceptance-v5-sources-introspection.test.ts
+  titre: '[rule-evp-unlinked-list-no-nir] [rule-evp-nir-key-never-shown] [rule-evp-secrets-never-exposed] with NIR of right and wrong keys on both sides, a missing scope, a failing introspection and an
+    upstream error echoing the key: no NIR, no key, no introspection answer anywhere (answers, tables, anomalies, rates, list, server log)'
+  vu_rouge: '2026-10-13'
+  sur: 6b4fec0

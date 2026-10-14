@@ -1,0 +1,6847 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/absence-types": {
+      "get": {
+        "description": "Use this API action to list the types of absence with their expected piece",
+        "operationId": "AbsencesController_types",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Types of absence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceTypesResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/absences": {
+      "get": {
+        "description": "Use this API action to list the dossiers of absence of the perimeter, newest first (200 at most)",
+        "operationId": "AbsencesController_list",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "One or several states (repeat the parameter)",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "A_COMPLETER",
+                    "ANTICIPEE",
+                    "A_VALIDER",
+                    "A_SAISIR",
+                    "DANS_PAYFIT",
+                    "REJETEE",
+                    "ANNULEE"
+                  ]
+                },
+                {
+                  "minItems": 1,
+                  "maxItems": 7,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "A_COMPLETER",
+                      "ANTICIPEE",
+                      "A_VALIDER",
+                      "A_SAISIR",
+                      "DANS_PAYFIT",
+                      "REJETEE",
+                      "ANNULEE"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Keep the dossiers whose period ends on or after this day",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "description": "Keep the dossiers whose period starts on or before this day",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "format": "date"
+            }
+          },
+          {
+            "name": "crecheCode",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "payrollMonth",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+              "example": "2026-03"
+            }
+          },
+          {
+            "name": "open",
+            "required": false,
+            "in": "query",
+            "description": "Only the open dossiers (to complete, anticipated, to validate, to enter) when true",
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dossiers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsencesListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown crèche or outside the perimeter"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      },
+      "post": {
+        "description": "Use this API action to declare an absence; an exact active duplicate answers 200 with the existing dossier",
+        "operationId": "AbsencesController_create",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Exact active duplicate: the existing dossier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceCreateResponseDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Dossier created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown contract (absences.contract_not_found)"
+          },
+          "409": {
+            "description": "Contract of another company, or piece not attachable"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbsenceCreateParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/absences/{id}": {
+      "get": {
+        "description": "Use this API action to read a dossier of absence with its pieces, timeline and allowed actions",
+        "operationId": "AbsencesController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The dossier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown dossier, or outside the perimeter"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      },
+      "patch": {
+        "description": "Use this API action to modify a dossier of absence; the state and the controls are recomputed",
+        "operationId": "AbsencesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The modified dossier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown dossier, or outside the perimeter"
+          },
+          "409": {
+            "description": "Not editable in this state, or duplicate of another active dossier"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbsenceUpdateParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/absences/{id}/audit": {
+      "get": {
+        "description": "Use this API action to read the audit entries of a dossier of absence",
+        "operationId": "JournalController_ofAbsence",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Entries of the dossier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceAuditResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - journal capability missing (RH and SUPERADMIN only)"
+          },
+          "404": {
+            "description": "Unknown dossier"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Journal"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/absences/{id}/cancel": {
+      "post": {
+        "description": "Use this API action to cancel a dossier of absence with an administrative reason",
+        "operationId": "AbsencesController_cancel",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The dossier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown dossier, or outside the perimeter"
+          },
+          "409": {
+            "description": "Action not allowed in the current state of the dossier (absences.decision_not_allowed)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbsenceReasonParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/absences/{id}/mark-entered": {
+      "post": {
+        "description": "Use this API action to declare that a dossier has been entered in PayFit (idempotent)",
+        "operationId": "AbsencesController_markEntered",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The dossier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown dossier, or outside the perimeter"
+          },
+          "409": {
+            "description": "Action not allowed in the current state of the dossier (absences.decision_not_allowed)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/absences/{id}/reject": {
+      "post": {
+        "description": "Use this API action to reject a dossier of absence with an administrative reason",
+        "operationId": "AbsencesController_reject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The dossier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown dossier, or outside the perimeter"
+          },
+          "409": {
+            "description": "Action not allowed in the current state of the dossier (absences.decision_not_allowed)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbsenceReasonParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/absences/{id}/return": {
+      "post": {
+        "description": "Use this API action to return a dossier of absence to the crèche with an administrative reason",
+        "operationId": "AbsencesController_returnToCreche",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The dossier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown dossier, or outside the perimeter"
+          },
+          "409": {
+            "description": "Action not allowed in the current state of the dossier (absences.decision_not_allowed)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbsenceReasonParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/absences/{id}/submit": {
+      "post": {
+        "description": "Use this API action to submit a dossier of absence; the controls are replayed",
+        "operationId": "AbsencesController_submit",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The dossier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown dossier, or outside the perimeter"
+          },
+          "409": {
+            "description": "Action not allowed in the current state of the dossier (absences.decision_not_allowed)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/absences/{id}/validate": {
+      "post": {
+        "description": "Use this API action to validate a dossier of absence; the controls are replayed",
+        "operationId": "AbsencesController_validate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The dossier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceDetailDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown dossier, or outside the perimeter"
+          },
+          "409": {
+            "description": "Not allowed in this state, or blocked by the controls (details.blockages)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/absences/validate-batch": {
+      "post": {
+        "description": "Use this API action to validate up to 50 dossiers; a blocked dossier is reported and does not stop the others",
+        "operationId": "AbsencesController_validateBatch",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Validated and blocked dossiers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbsenceValidateBatchResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbsenceValidateBatchParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/access-accounts": {
+      "get": {
+        "description": "Use this API action to list the access accounts the caller can manage",
+        "operationId": "AccessController_list",
+        "parameters": [
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Part of the name or of the e-mail address",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "description": "DIRECTRICE is reserved to the superadmin",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "RO",
+                "DIRECTRICE"
+              ]
+            }
+          },
+          {
+            "name": "active",
+            "required": false,
+            "in": "query",
+            "description": "Only the active (true) or the inactive (false) accounts",
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Index of the first element (default 0)",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "description": "Page size (default 10)",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                10,
+                25,
+                50
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page of access accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing, privileged account or role not manageable"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Access"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      },
+      "post": {
+        "description": "Use this API action to create an access account (RO, or directrice for the superadmin)",
+        "operationId": "AccessController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Access account created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessAccountDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing, privileged account or role not manageable"
+          },
+          "409": {
+            "description": "An account already uses this e-mail"
+          },
+          "422": {
+            "description": "Invalid domain, missing or unverified crèche, directrice not matching the source table"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Access"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessCreateParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/access-accounts/{id}": {
+      "patch": {
+        "description": "Use this API action to change the address, name, role, status or crèches of an access account",
+        "operationId": "AccessController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access account updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessAccountDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing, privileged account or role not manageable"
+          },
+          "404": {
+            "description": "Unknown access account"
+          },
+          "409": {
+            "description": "A caller cannot change their own role, or the address is already used (access.email_already_exists)"
+          },
+          "422": {
+            "description": "Invalid domain, missing or unverified crèche, directrice not matching the source table"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Access"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessUpdateParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/access-accounts/{id}/remove": {
+      "post": {
+        "description": "Use this API action to remove an access: the account is deactivated, its crèches released, its history kept",
+        "operationId": "AccessController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access account removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessAccountDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing, privileged account or role not manageable"
+          },
+          "404": {
+            "description": "Unknown access account"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Access"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/access-accounts/{id}/unlink-google": {
+      "post": {
+        "description": "Use this API action to unbind an access from its Google account (recreated account): its open sessions are cut and the next valid sign-in of the address binds the new Google account",
+        "operationId": "AccessController_unlinkGoogle",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access account unbound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessAccountDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing, privileged account or role not manageable"
+          },
+          "404": {
+            "description": "Unknown access account"
+          },
+          "409": {
+            "description": "The access is not linked to a Google account (access.google_not_linked)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Access"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/audit-logs": {
+      "get": {
+        "description": "Use this API action to list the audit journal, newest first, with combinable filters (administrators only)",
+        "operationId": "AuditController_list",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Index of the first entry to return (default 0)",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "description": "Number of entries to return (default 10)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "actorId",
+            "required": false,
+            "in": "query",
+            "description": "Only the entries of this author (a deleted account included)",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "action",
+            "required": false,
+            "in": "query",
+            "description": "Exact action code, e.g. `groups:update`",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "objectType",
+            "required": false,
+            "in": "query",
+            "description": "Exact object type, e.g. `Groupe`",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "scope",
+            "required": false,
+            "in": "query",
+            "description": "Exact scope code",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            }
+          },
+          {
+            "name": "occurredFrom",
+            "required": false,
+            "in": "query",
+            "description": "Lower bound, inclusive: ISO 8601 date-time with a zone (Z or offset)",
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 35,
+              "format": "date-time",
+              "example": "2026-01-31T23:59:59.999Z"
+            }
+          },
+          {
+            "name": "occurredTo",
+            "required": false,
+            "in": "query",
+            "description": "Upper bound, inclusive: ISO 8601 date-time with a zone (Z or offset), not before occurredFrom",
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 35,
+              "format": "date-time",
+              "example": "2026-01-31T23:59:59.999Z"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page of journal entries and number of entries matching the filters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogsListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Audit"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/audit-logs/filters": {
+      "get": {
+        "description": "Use this API action to get the values offered by the filters of the journal screen, taken from the journal itself (administrators only)",
+        "operationId": "AuditController_filters",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Authors, actions, object types and scopes found in the journal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogFiltersDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Audit"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/auth/current-user": {
+      "get": {
+        "description": "Get the current user. If there is no logged user (header or cookie), it returns an empty object",
+        "operationId": "AuthController_currentUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Only if cookie is not set to true",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "description": "Login with email and password",
+        "operationId": "AuthController_loginWithPassword",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginWithPasswordResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginWithPasswordParamsDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "description": "Delete the JWT from the cookies",
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/creches": {
+      "get": {
+        "description": "Use this API action to list the crèches visible to the caller",
+        "operationId": "CrechesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Crèches of the perimeter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrechesListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Creches"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/creches/{code}/closures": {
+      "get": {
+        "description": "Use this API action to list the monthly closures of a crèche (current payroll month and five previous ones)",
+        "operationId": "ClosuresController_list",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Months of the crèche with their closure state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosuresListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown crèche or outside the perimeter"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Closures"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/creches/{code}/closures/{month}": {
+      "post": {
+        "description": "Use this API action to attest and close a month of a crèche; an open dossier blocks the closure",
+        "operationId": "ClosuresController_attest",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "month",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+              "example": "2026-03"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Month closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosureAttestResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown crèche or outside the perimeter"
+          },
+          "409": {
+            "description": "Open dossiers (details.openCount), or month already closed"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Closures"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClosureAttestParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/creches/{code}/contracts": {
+      "get": {
+        "description": "Use this API action to list the imported PayFit contracts of a crèche",
+        "operationId": "CrechesController_contracts",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Part of the name of the employee",
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contracts of the company linked to the crèche by SIRET",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrecheContractsResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown crèche or outside the perimeter"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Creches"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/exports/absences": {
+      "post": {
+        "description": "Use this API action to export the dossiers overlapping a period (366 days at most) as a CSV file (text/csv, attachment)",
+        "operationId": "ExportsController_absences",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "CSV file",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "CSV file: UTF-8 with BOM, semicolon separated, CRLF lines, quoted cells"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid period"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - RH and SUPERADMIN only"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Exports"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportAbsencesParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/google-sign-in/callback": {
+      "get": {
+        "description": "Use this API action as the return address of Google: it opens the session (8 hours) and redirects to the studio",
+        "operationId": "GoogleSignInController_callback",
+        "parameters": [
+          {
+            "name": "code",
+            "required": false,
+            "in": "query",
+            "description": "Authorization code returned by Google",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "description": "State sent at the start, bound to the browser",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "in": "query",
+            "description": "Error returned by Google (refusal of the user)",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirection (no body)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "GoogleSignIn"
+        ]
+      }
+    },
+    "/google-sign-in/start": {
+      "get": {
+        "description": "Use this API action to start the Google Workspace sign-in (redirection to Google)",
+        "operationId": "GoogleSignInController_start",
+        "parameters": [
+          {
+            "name": "redirection",
+            "required": false,
+            "in": "query",
+            "description": "Relative path of the studio to open after the sign-in; ignored when not a safe relative path",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirection (no body)"
+          },
+          "503": {
+            "description": "Google sign-in is not configured (platform.service_unavailable)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "GoogleSignIn"
+        ]
+      }
+    },
+    "/groups": {
+      "get": {
+        "description": "Use this API action to list the groups with their members and scopes",
+        "operationId": "GroupsController_list",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to return (integer from 0 to 2147483647, default 0)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "description": "The number of elements to return (integer from 1 to 100, default 10)",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupsListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Groups"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      },
+      "post": {
+        "description": "Use this API action to create a group with its members and scopes in one request",
+        "operationId": "GroupsController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Group created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupsCreateResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Groups"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupsCreateParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/groups/{id}": {
+      "patch": {
+        "description": "Use this API action to change the name, members and/or scopes of a group. Provided fields replace the current values",
+        "operationId": "GroupsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupsUpdateResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Groups"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupsUpdateParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/journal-entries": {
+      "get": {
+        "description": "Use this API action to list the entries of the EVP journal, newest first",
+        "operationId": "JournalController_list",
+        "parameters": [
+          {
+            "name": "operation",
+            "required": false,
+            "in": "query",
+            "description": "Operation code, for instance absences:validate",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "actorId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "absenceId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "format": "date"
+            }
+          },
+          {
+            "name": "dateTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "format": "date"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Index of the first element (default 0)",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "description": "Page size (default 25)",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                10,
+                25,
+                50
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Journal page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JournalResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - journal capability missing (RH and SUPERADMIN only)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Journal"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/journal-entries/filters": {
+      "get": {
+        "description": "Use this API action to list the operations and the authors that can filter the journal",
+        "operationId": "JournalController_filters",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Filters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JournalFiltersResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - journal capability missing (RH and SUPERADMIN only)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Journal"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/justificatifs/{id}/confirm": {
+      "post": {
+        "description": "Use this API action to confirm a deposited document: size and signature are checked, the bytes are copied out of the deposit zone",
+        "operationId": "JustificatifsController_confirm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Piece confirmed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PieceConfirmResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown piece, or outside the perimeter"
+          },
+          "409": {
+            "description": "upload_expired, not_uploaded, size_mismatch, signature_mismatch or too_many"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Justificatifs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/justificatifs/{id}/read-link": {
+      "post": {
+        "description": "Use this API action to get a 60-second link to open a confirmed document; each opening is traced",
+        "operationId": "JustificatifsController_readLink",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Short-lived link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PieceReadLinkResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Not an EVP account, or private piece (justificatifs.private_piece)"
+          },
+          "404": {
+            "description": "Unknown piece, or outside the perimeter"
+          },
+          "409": {
+            "description": "Piece not confirmed (justificatifs.not_confirmed)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Justificatifs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/justificatifs/authorize-upload": {
+      "post": {
+        "description": "Use this API action to get a 5-minute signed URL to deposit a supporting document (PDF, JPEG or PNG, 10 MiB at most)",
+        "operationId": "JustificatifsController_authorize",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Signed deposit URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PieceAuthorizeUploadResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Dossier unknown or outside the perimeter"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Justificatifs"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PieceAuthorizeUploadParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/notifications": {
+      "get": {
+        "description": "Use this API action to list the notifications of the perimeter, newest first (100 at most)",
+        "operationId": "NotificationsController_list",
+        "parameters": [
+          {
+            "name": "unreadOnly",
+            "required": false,
+            "in": "query",
+            "description": "Only the notifications not yet read by the caller when true",
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationsResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/notifications/{id}/read": {
+      "post": {
+        "description": "Use this API action to mark a notification as read for the caller (idempotent)",
+        "operationId": "NotificationsController_markRead",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read mark",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationMarkReadDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account"
+          },
+          "404": {
+            "description": "Unknown notification or outside the perimeter"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/notifications/unread-count": {
+      "get": {
+        "description": "Use this API action to count the notifications of the perimeter not yet read by the caller",
+        "operationId": "NotificationsController_unreadCount",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Counter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationsUnreadCountDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/profile": {
+      "get": {
+        "description": "Use this API action to read the profile, the scope and the capabilities of the caller",
+        "operationId": "ProfileController_read",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Profile of the caller",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - no session, invalid token or session older than 8 hours"
+          },
+          "403": {
+            "description": "Forbidden - no EVP access (access.not_authorized) or inactive account (access.account_inactive)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Profile"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/scopes": {
+      "get": {
+        "description": "Use this API action to list the scopes, sorted by code",
+        "operationId": "ScopesController_list",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to return (integer from 0 to 2147483647, default 0)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "description": "The number of elements to return (integer from 1 to 100, default 10)",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of scopes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScopesListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Scopes"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      },
+      "post": {
+        "description": "Use this API action to create a scope",
+        "operationId": "ScopesController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Scope created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScopesCreateResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Scopes"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScopesCreateParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/scopes/{id}": {
+      "patch": {
+        "description": "Use this API action to rename a scope. The code cannot be changed",
+        "operationId": "ScopesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scope renamed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScopesUpdateResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Scopes"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScopesUpdateParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/server/health-check": {
+      "get": {
+        "description": "Health check",
+        "operationId": "ServerController_healthCheck",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All services are healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponseDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "One or more services are unhealthy"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Server"
+        ]
+      }
+    },
+    "/service-status": {
+      "get": {
+        "description": "Use this API action to know whether the service is ready and, if not, why",
+        "operationId": "ServiceStatusController_status",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceStatusResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "ServiceStatus"
+        ]
+      }
+    },
+    "/settings": {
+      "get": {
+        "description": "Use this API action to read the visible configuration: limits, windows read, absence types",
+        "operationId": "SettingsController_read",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Visible configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Settings"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/sources": {
+      "get": {
+        "description": "Use this API action to list the sources with their state, volumes, reading window and anomaly count",
+        "operationId": "SourcesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourcesResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing (RH and SUPERADMIN only)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Sources"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/sources/{key}/anomalies": {
+      "get": {
+        "description": "Use this API action to list the anomalies of the last successful reading of a source",
+        "operationId": "SourcesController_anomalies",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "workspace",
+                "sheets",
+                "payfit",
+                "aqoona"
+              ]
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Index of the first element (default 0)",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "description": "Page size (default 25)",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                10,
+                25,
+                50
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Anomalies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceAnomaliesResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing (RH and SUPERADMIN only)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Sources"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/sources/{key}/refresh": {
+      "post": {
+        "description": "Use this API action to read one source (Sheets: SUPERADMIN; PayFit, Aqoona: RH and SUPERADMIN); Workspace is not readable",
+        "operationId": "SourcesController_refresh",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "workspace",
+                "sheets",
+                "payfit",
+                "aqoona"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Reading started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceStartRunResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing (RH and SUPERADMIN only)"
+          },
+          "404": {
+            "description": "Workspace cannot be refreshed through the API"
+          },
+          "409": {
+            "description": "A reading of this source is already running (sources.run_in_progress)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Sources"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/sources/aqoona/matching-rates": {
+      "get": {
+        "description": "Use this API action to read, for each company, the number and the share of the people linked to PayFit by their NIR and of the people not linked",
+        "operationId": "SourcesController_matchingRates",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Rates of attachment per company, in people",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceAqoonaMatchingRatesDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing (RH and SUPERADMIN only)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Sources"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/sources/aqoona/unlinked-people": {
+      "get": {
+        "description": "Use this API action to list the people of Aqoona not linked to PayFit, with the cause and the crèches where they were read",
+        "operationId": "SourcesController_unlinkedPeople",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Index of the first element (default 0)",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "description": "Page size (default 25)",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                10,
+                25,
+                50
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "People not linked, one entry per person and per cause",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceAqoonaUnlinkedPeopleDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Query parameter out of bounds"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing (RH and SUPERADMIN only)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Sources"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/sources/refresh-all": {
+      "post": {
+        "description": "Use this API action to read Sheets, then PayFit, then Aqoona (the first failure stops the chain)",
+        "operationId": "SourcesController_refreshAll",
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "Reading started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceStartAllResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing (RH and SUPERADMIN only)"
+          },
+          "409": {
+            "description": "A reading is already running (sources.run_in_progress)"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Sources"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/sources/runs/{id}": {
+      "get": {
+        "description": "Use this API action to follow a reading",
+        "operationId": "SourcesController_run",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reading",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceRunDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - capability missing (RH and SUPERADMIN only)"
+          },
+          "404": {
+            "description": "Unknown reading"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Sources"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/todo": {
+      "get": {
+        "description": "Use this API action to get the counters, the priority dossiers and the recent activity of the caller",
+        "operationId": "AbsencesController_todo",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "format": "date"
+            }
+          },
+          {
+            "name": "crecheCode",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The to-do board",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not an EVP account, or capability missing"
+          },
+          "404": {
+            "description": "Unknown crèche or outside the perimeter"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Absences"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "description": "Use this API action to list users (administrators only)",
+        "operationId": "UsersController_list",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to return (integer from 0 to 2147483647, default 0)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "description": "The number of elements to return (integer from 1 to 100, default 10)",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users with their groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      },
+      "post": {
+        "description": "Use this API action to create a new user, optionally in some groups",
+        "operationId": "UsersController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersCreateResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsersCreateParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "description": "Use this API action to get a single user. An ordinary user can only read their own account",
+        "operationId": "UsersController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User with their groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserGetResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      },
+      "patch": {
+        "description": "Use this API action to change the role and/or the groups of a user",
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersUpdateResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsersUpdateParamsDto"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/users/imports/{importId}/confirm": {
+      "post": {
+        "description": "Use this API action to create the accounts of the valid rows of a preview (administrators only, once per file)",
+        "operationId": "UsersImportController_confirm",
+        "parameters": [
+          {
+            "name": "importId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Counts of the confirmation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportConfirmResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/users/imports/{importId}/errors": {
+      "get": {
+        "description": "Use this API action to list, page by page, the faults found in the preview of an accounts file",
+        "operationId": "UsersImportController_errors",
+        "parameters": [
+          {
+            "name": "importId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Index of the first entry to return (default 0)",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            }
+          },
+          {
+            "name": "size",
+            "required": false,
+            "in": "query",
+            "description": "Number of entries to return (default 10)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One page of (row, column, reason) entries and their total",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportErrorsListResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/users/imports/preview": {
+      "post": {
+        "description": "Use this API action to analyse an accounts file (.xlsx or .csv) without creating anything",
+        "operationId": "UsersImportController_preview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Counts of the analysis and identifier of the preview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportPreviewDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    },
+    "/users/imports/specification": {
+      "get": {
+        "description": "Use this API action to get the columns, formats and limits of the accounts import (administrators only)",
+        "operationId": "UsersImportController_specification",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Columns expected in the file and limits of the import",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportSpecificationDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - insufficient role permissions"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "evpms API",
+    "description": "",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      },
+      "cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "evpms-jwt-<host>"
+      }
+    },
+    "schemas": {
+      "AbsenceTypesResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "expectedPiece": {
+                  "nullable": true,
+                  "type": "string"
+                },
+                "privatePiece": {
+                  "type": "boolean"
+                },
+                "hrReview": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "code",
+                "label",
+                "expectedPiece",
+                "privatePiece",
+                "hrReview"
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "AbsencesListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AbsenceSummaryDto"
+            }
+          },
+          "truncated": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "truncated"
+        ]
+      },
+      "AbsenceSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crecheCode": {
+            "type": "string"
+          },
+          "crecheName": {
+            "type": "string"
+          },
+          "employeeName": {
+            "type": "string"
+          },
+          "contractLabel": {
+            "type": "string"
+          },
+          "typeCode": {
+            "type": "string"
+          },
+          "typeLabel": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "startHalf": {
+            "type": "string",
+            "enum": [
+              "MATIN",
+              "APRES_MIDI"
+            ]
+          },
+          "endDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "endHalf": {
+            "type": "string",
+            "enum": [
+              "MATIN",
+              "APRES_MIDI"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "A_COMPLETER",
+              "ANTICIPEE",
+              "A_VALIDER",
+              "A_SAISIR",
+              "DANS_PAYFIT",
+              "REJETEE",
+              "ANNULEE"
+            ]
+          },
+          "saisieDeclaree": {
+            "type": "boolean"
+          },
+          "payrollMonth": {
+            "type": "string",
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+            "example": "2026-03"
+          },
+          "blockages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AbsenceBlockageDto"
+            }
+          },
+          "nextAction": {
+            "$ref": "#/components/schemas/AbsenceNextActionDto"
+          },
+          "selectable": {
+            "type": "boolean",
+            "description": "True when the caller may select the dossier for the batch validation"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "crecheCode",
+          "crecheName",
+          "employeeName",
+          "contractLabel",
+          "typeCode",
+          "typeLabel",
+          "startDate",
+          "startHalf",
+          "endDate",
+          "endHalf",
+          "status",
+          "saisieDeclaree",
+          "payrollMonth",
+          "blockages",
+          "nextAction",
+          "selectable",
+          "createdAt"
+        ]
+      },
+      "AbsenceBlockageDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "AbsenceNextActionDto": {
+        "type": "object",
+        "properties": {
+          "actor": {
+            "type": "string",
+            "enum": [
+              "DECLARANT",
+              "RH",
+              "LECTURE_PAYFIT",
+              "AUCUN"
+            ]
+          },
+          "actorLabel": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "actor",
+          "actorLabel",
+          "label"
+        ]
+      },
+      "AbsenceCreateParamsDto": {
+        "type": "object",
+        "properties": {
+          "crecheCode": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "contractId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Local identifier of the contract (company + PayFit contract)"
+          },
+          "typeCode": {
+            "type": "string",
+            "enum": [
+              "CONGES_PAYES",
+              "ARRET_MALADIE",
+              "SANS_SOLDE",
+              "ENFANT_MALADE",
+              "ACCIDENT_TRAVAIL",
+              "RECUPERATION",
+              "SANS_JUSTIFICATIF",
+              "EVENEMENT_FAMILIAL",
+              "AUTRE"
+            ]
+          },
+          "startDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "startHalf": {
+            "type": "string",
+            "enum": [
+              "MATIN",
+              "APRES_MIDI"
+            ]
+          },
+          "endDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "endHalf": {
+            "type": "string",
+            "enum": [
+              "MATIN",
+              "APRES_MIDI"
+            ]
+          },
+          "comment": {
+            "nullable": true,
+            "type": "string",
+            "maxLength": 500,
+            "description": "Administrative comment, at most 500 characters. Never copied to the journal, the timeline or the logs"
+          },
+          "justificatifIds": {
+            "description": "Confirmed, unattached pieces of the crèche: at most 5, distinct",
+            "uniqueItems": true,
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "crecheCode",
+          "contractId",
+          "typeCode",
+          "startDate",
+          "startHalf",
+          "endDate",
+          "endHalf"
+        ]
+      },
+      "AbsenceCreateResponseDto": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/AbsenceDetailDto"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "duplicate": {
+                "type": "boolean",
+                "enum": [
+                  true
+                ]
+              },
+              "absence": {
+                "$ref": "#/components/schemas/AbsenceDetailDto"
+              }
+            },
+            "required": [
+              "duplicate",
+              "absence"
+            ]
+          }
+        ]
+      },
+      "AbsenceDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crecheCode": {
+            "type": "string"
+          },
+          "crecheName": {
+            "type": "string"
+          },
+          "employeeName": {
+            "type": "string"
+          },
+          "contractLabel": {
+            "type": "string"
+          },
+          "typeCode": {
+            "type": "string"
+          },
+          "typeLabel": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "startHalf": {
+            "type": "string",
+            "enum": [
+              "MATIN",
+              "APRES_MIDI"
+            ]
+          },
+          "endDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "endHalf": {
+            "type": "string",
+            "enum": [
+              "MATIN",
+              "APRES_MIDI"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "A_COMPLETER",
+              "ANTICIPEE",
+              "A_VALIDER",
+              "A_SAISIR",
+              "DANS_PAYFIT",
+              "REJETEE",
+              "ANNULEE"
+            ]
+          },
+          "saisieDeclaree": {
+            "type": "boolean"
+          },
+          "payrollMonth": {
+            "type": "string",
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+            "example": "2026-03"
+          },
+          "blockages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AbsenceBlockageDto"
+            }
+          },
+          "nextAction": {
+            "$ref": "#/components/schemas/AbsenceNextActionDto"
+          },
+          "selectable": {
+            "type": "boolean",
+            "description": "True when the caller may select the dossier for the batch validation"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "allowedActions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "ATTACH",
+                "CANCEL",
+                "MARK_ENTERED",
+                "REJECT",
+                "RETURN",
+                "SUBMIT",
+                "VALIDATE"
+              ]
+            }
+          },
+          "comment": {
+            "nullable": true,
+            "type": "string"
+          },
+          "declaredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "declaredBy": {
+            "type": "string"
+          },
+          "employee": {
+            "type": "object",
+            "properties": {
+              "contractId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "payfitContractId": {
+                "type": "string"
+              },
+              "companyName": {
+                "type": "string"
+              },
+              "employeeName": {
+                "type": "string"
+              },
+              "startDate": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "format": "date"
+              },
+              "endDate": {
+                "nullable": true,
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "format": "date"
+              }
+            },
+            "required": [
+              "contractId",
+              "payfitContractId",
+              "companyName",
+              "employeeName",
+              "startDate",
+              "endDate"
+            ]
+          },
+          "expectedPiece": {
+            "nullable": true,
+            "type": "string"
+          },
+          "lastDecision": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "byName": {
+                "type": "string"
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "reason": {
+                "nullable": true,
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "byName",
+              "at",
+              "reason"
+            ]
+          },
+          "payfitAlert": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "ANNULEE",
+                  "MODIFIEE",
+                  "DISPARUE"
+                ]
+              },
+              "change": {
+                "type": "string"
+              },
+              "observedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "priorProof": {
+                "type": "object",
+                "properties": {
+                  "company": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "sourceStatus": {
+                    "type": "string"
+                  },
+                  "observedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                    "format": "date"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                    "format": "date"
+                  }
+                },
+                "required": [
+                  "company",
+                  "code",
+                  "sourceStatus",
+                  "observedAt",
+                  "startDate",
+                  "endDate"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "change",
+              "observedAt",
+              "priorProof"
+            ]
+          },
+          "payfitCode": {
+            "nullable": true,
+            "type": "string"
+          },
+          "payfitProof": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AbsencePayfitProofDto"
+              }
+            ]
+          },
+          "pieces": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "sizeBytes": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "confirmed": {
+                  "type": "boolean"
+                },
+                "addedByName": {
+                  "type": "string"
+                },
+                "canOpen": {
+                  "type": "boolean"
+                },
+                "privatePiece": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "sizeBytes",
+                "confirmed",
+                "addedByName",
+                "canOpen",
+                "privatePiece"
+              ]
+            }
+          },
+          "progress": {
+            "type": "object",
+            "properties": {
+              "step": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "total": {
+                "type": "number",
+                "enum": [
+                  5
+                ]
+              },
+              "label": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "step",
+              "total",
+              "label"
+            ]
+          },
+          "timeline": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "byName": {
+                  "nullable": true,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "at",
+                "kind",
+                "text",
+                "byName"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "crecheCode",
+          "crecheName",
+          "employeeName",
+          "contractLabel",
+          "typeCode",
+          "typeLabel",
+          "startDate",
+          "startHalf",
+          "endDate",
+          "endHalf",
+          "status",
+          "saisieDeclaree",
+          "payrollMonth",
+          "blockages",
+          "nextAction",
+          "selectable",
+          "createdAt",
+          "allowedActions",
+          "comment",
+          "declaredAt",
+          "declaredBy",
+          "employee",
+          "expectedPiece",
+          "lastDecision",
+          "payfitAlert",
+          "payfitCode",
+          "payfitProof",
+          "pieces",
+          "progress",
+          "timeline"
+        ]
+      },
+      "AbsencePayfitProofDto": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "sourceStatus": {
+            "type": "string"
+          },
+          "observedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "company",
+          "code",
+          "sourceStatus",
+          "observedAt"
+        ]
+      },
+      "AbsenceUpdateParamsDto": {
+        "type": "object",
+        "properties": {
+          "typeCode": {
+            "type": "string",
+            "enum": [
+              "CONGES_PAYES",
+              "ARRET_MALADIE",
+              "SANS_SOLDE",
+              "ENFANT_MALADE",
+              "ACCIDENT_TRAVAIL",
+              "RECUPERATION",
+              "SANS_JUSTIFICATIF",
+              "EVENEMENT_FAMILIAL",
+              "AUTRE"
+            ]
+          },
+          "startDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "startHalf": {
+            "type": "string",
+            "enum": [
+              "MATIN",
+              "APRES_MIDI"
+            ]
+          },
+          "endDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "endHalf": {
+            "type": "string",
+            "enum": [
+              "MATIN",
+              "APRES_MIDI"
+            ]
+          },
+          "comment": {
+            "nullable": true,
+            "type": "string",
+            "maxLength": 500,
+            "description": "Administrative comment, at most 500 characters. Never copied to the journal, the timeline or the logs"
+          }
+        }
+      },
+      "AbsenceAuditResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JournalEntryDto"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "JournalEntryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actorName": {
+            "type": "string"
+          },
+          "actorEmail": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "operationLabel": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "absenceId": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "occurredAt",
+          "actorName",
+          "actorEmail",
+          "operation",
+          "operationLabel",
+          "summary",
+          "absenceId"
+        ]
+      },
+      "AbsenceReasonParamsDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Administrative reason, 1 to 500 characters"
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "AbsenceValidateBatchParamsDto": {
+        "type": "object",
+        "properties": {
+          "absenceIds": {
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "1 to 50 distinct dossiers",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "absenceIds"
+        ]
+      },
+      "AbsenceValidateBatchResponseDto": {
+        "type": "object",
+        "properties": {
+          "validated": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "A_SAISIR"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "status"
+              ]
+            }
+          },
+          "blocked": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "employeeName": {
+                  "nullable": true,
+                  "type": "string"
+                },
+                "blockages": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AbsenceBlockageDto"
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "employeeName",
+                "blockages"
+              ]
+            }
+          }
+        },
+        "required": [
+          "validated",
+          "blocked"
+        ]
+      },
+      "AccessListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccessAccountDto"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ]
+      },
+      "AccessAccountDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "RO",
+              "DIRECTRICE"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "googleLinked": {
+            "type": "boolean",
+            "description": "Whether the access is bound to a Google account"
+          },
+          "creches": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccessCrecheDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "role",
+          "active",
+          "googleLinked",
+          "creches"
+        ]
+      },
+      "AccessCrecheDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "AccessCreateParamsDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "description": "Address ending with @micro-stars.fr, at most 254 characters",
+            "example": "rosa@micro-stars.fr"
+          },
+          "name": {
+            "description": "Display name, 1 to 120 characters",
+            "example": "Rosa Alpha",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "RO",
+              "DIRECTRICE"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "crecheCodes": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "description": "Codes of the verified crèches the account is assigned to (0 to 50)"
+          }
+        },
+        "required": [
+          "email",
+          "name",
+          "role",
+          "active",
+          "crecheCodes"
+        ]
+      },
+      "AccessUpdateParamsDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "description": "New address ending with @micro-stars.fr, at most 254 characters, compared ignoring case",
+            "type": "string",
+            "maxLength": 254
+          },
+          "name": {
+            "description": "Display name, 1 to 120 characters",
+            "example": "Rosa Alpha",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "RO",
+              "DIRECTRICE"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "crecheCodes": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "description": "Codes of the verified crèches the account is assigned to (0 to 50)"
+          }
+        }
+      },
+      "AuditLogsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditEntryDto"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Number of entries matching the filters",
+            "example": 42
+          }
+        },
+        "required": [
+          "entries",
+          "total"
+        ]
+      },
+      "AuditEntryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Entry ID"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Time of the action (ISO 8601, UTC, millisecond precision)",
+            "example": "2026-01-31T10:15:30.123Z"
+          },
+          "actor": {
+            "$ref": "#/components/schemas/AuditActorDto"
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Action code `<feature>:<verb>`",
+            "example": "groups:update"
+          },
+          "objectType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "French label of the kind of object",
+            "example": "Groupe"
+          },
+          "objectId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Id of the object (not necessarily a uuid)"
+          },
+          "scope": {
+            "nullable": true,
+            "description": "Code of the scope the action targets, null if none",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Readable French text, never a secret"
+          }
+        },
+        "required": [
+          "id",
+          "occurredAt",
+          "actor",
+          "action",
+          "objectType",
+          "objectId",
+          "scope",
+          "summary"
+        ]
+      },
+      "AuditActorDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "User ID of the author"
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 254,
+            "description": "E-mail of the author at the time of the action",
+            "example": "admin@example.com"
+          }
+        },
+        "required": [
+          "id",
+          "email"
+        ]
+      },
+      "AuditLogFiltersDto": {
+        "type": "object",
+        "properties": {
+          "actors": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditActorDto"
+            },
+            "description": "Authors found in the journal, with the e-mail of their latest entry, sorted by e-mail"
+          },
+          "actions": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "description": "Distinct action codes, sorted"
+          },
+          "objectTypes": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "description": "Distinct object types, sorted"
+          },
+          "scopes": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            },
+            "description": "Distinct scope codes, sorted"
+          }
+        },
+        "required": [
+          "actors",
+          "actions",
+          "objectTypes",
+          "scopes"
+        ]
+      },
+      "CurrentUserResponseDTO": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "description": "User information",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthUserDto"
+              }
+            ]
+          }
+        }
+      },
+      "AuthUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User ID",
+            "example": "123"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the user",
+            "example": "john.doe@example.com"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "user"
+            ],
+            "description": "Role name the user has"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "role"
+        ]
+      },
+      "LoginWithPasswordParamsDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email of the user",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user",
+            "example": "securePassword123"
+          },
+          "returnToken": {
+            "description": "Whether to return the token in the response. An error will be thrown if no origin header is provided and returnToken is false",
+            "example": true,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "LoginWithPasswordResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "description": "JWT token for authentication. Only returned if returnToken is true",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+            "type": "string"
+          }
+        }
+      },
+      "CrechesListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CrecheDto"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "CrecheDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "name": {
+            "type": "string"
+          },
+          "siret": {
+            "type": "string"
+          },
+          "directriceName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "roNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "True for a crèche present in the last successful Sheets read"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "siret",
+          "directriceName",
+          "roNames",
+          "verified"
+        ]
+      },
+      "ClosuresListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClosureItemDto"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "ClosureItemDto": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string",
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+            "example": "2026-03"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OUVERT",
+              "CLOTURE"
+            ]
+          },
+          "openCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Open dossiers (to complete, anticipated, to validate, to enter) of the month"
+          },
+          "closedAt": {
+            "nullable": true,
+            "format": "date-time",
+            "type": "string"
+          },
+          "closedByName": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "month",
+          "status",
+          "openCount",
+          "closedAt",
+          "closedByName"
+        ]
+      },
+      "ClosureAttestParamsDto": {
+        "type": "object",
+        "properties": {
+          "attested": {
+            "type": "boolean",
+            "enum": [
+              true
+            ],
+            "description": "Must be true: the directrice attests the check of the absences"
+          }
+        },
+        "required": [
+          "attested"
+        ]
+      },
+      "ClosureAttestResponseDto": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string",
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+            "example": "2026-03"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "CLOTURE"
+            ]
+          },
+          "closedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closedByName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "month",
+          "status",
+          "closedAt",
+          "closedByName"
+        ]
+      },
+      "CrecheContractsResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CrecheContractDto"
+            }
+          },
+          "planningRestricted": {
+            "type": "boolean",
+            "description": "True when the crèche shares its SIRET with another verified crèche (rule-evp-siret-shared-contracts-flag)"
+          }
+        },
+        "required": [
+          "items",
+          "planningRestricted"
+        ]
+      },
+      "CrecheContractDto": {
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Local identifier of the pair company + PayFit contract"
+          },
+          "payfitContractId": {
+            "type": "string"
+          },
+          "employeeName": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "endDate": {
+            "nullable": true,
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          }
+        },
+        "required": [
+          "contractId",
+          "payfitContractId",
+          "employeeName",
+          "startDate",
+          "endDate"
+        ]
+      },
+      "ExportAbsencesParamsDto": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ]
+      },
+      "GroupsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total number of groups",
+            "example": 3
+          }
+        },
+        "required": [
+          "groups",
+          "total"
+        ]
+      },
+      "GroupDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Group ID"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Name of the group, unique ignoring case",
+            "example": "Équipe Nord"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupMemberDto"
+            },
+            "description": "Members, sorted by e-mail"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScopeDto"
+            },
+            "description": "Scopes the group gives access to, sorted by code"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "members",
+          "scopes"
+        ]
+      },
+      "GroupMemberDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "User ID"
+          },
+          "email": {
+            "type": "string",
+            "description": "E-mail of the member",
+            "example": "john.doe@example.com"
+          }
+        },
+        "required": [
+          "id",
+          "email"
+        ]
+      },
+      "ScopeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Scope ID"
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,49}$",
+            "description": "Unique, immutable code business tables refer to",
+            "example": "creche-1"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Display name",
+            "example": "Crèche du Parc"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name"
+        ]
+      },
+      "GroupsCreateParamsDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the group, trimmed, not empty, unique ignoring case",
+            "example": "Équipe Nord",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "userIds": {
+            "description": "Members of the group (rule-foundation-group-members-optional): distinct ids of existing users, none by default",
+            "uniqueItems": true,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "scopeIds": {
+            "minItems": 1,
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Scopes of the group (rule-foundation-group-needs-scope): 1 or more distinct ids of existing scopes",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "name",
+          "scopeIds"
+        ]
+      },
+      "GroupsCreateResponseDto": {
+        "type": "object",
+        "properties": {
+          "group": {
+            "$ref": "#/components/schemas/GroupDto"
+          }
+        },
+        "required": [
+          "group"
+        ]
+      },
+      "GroupsUpdateParamsDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "New name of the group, trimmed, not empty",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "userIds": {
+            "description": "New set of members (replaces the current one, [] removes all)",
+            "uniqueItems": true,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "scopeIds": {
+            "description": "New set of scopes (replaces the current one), at least 1",
+            "uniqueItems": true,
+            "minItems": 1,
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "GroupsUpdateResponseDto": {
+        "type": "object",
+        "properties": {
+          "group": {
+            "$ref": "#/components/schemas/GroupDto"
+          }
+        },
+        "required": [
+          "group"
+        ]
+      },
+      "JournalResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JournalEntryDto"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ]
+      },
+      "JournalFiltersResponseDto": {
+        "type": "object",
+        "properties": {
+          "actors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ]
+            }
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "label"
+              ]
+            }
+          }
+        },
+        "required": [
+          "actors",
+          "operations"
+        ]
+      },
+      "PieceConfirmResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "confirmed": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "sizeBytes",
+          "confirmed"
+        ]
+      },
+      "PieceReadLinkResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "url",
+          "expiresAt"
+        ]
+      },
+      "PieceAuthorizeUploadParamsDto": {
+        "type": "object",
+        "properties": {
+          "crecheCode": {
+            "description": "Crèche of the piece; defaults to the crèche of the dossier, else to the only crèche of the caller",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "absenceId": {
+            "description": "Dossier the piece is meant for; it is attached on confirmation",
+            "type": "string",
+            "format": "uuid"
+          },
+          "fileName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "contentType": {
+            "type": "string",
+            "enum": [
+              "application/pdf",
+              "image/jpeg",
+              "image/png"
+            ]
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10485760
+          }
+        },
+        "required": [
+          "fileName",
+          "contentType",
+          "sizeBytes"
+        ]
+      },
+      "PieceAuthorizeUploadResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "PUT"
+            ]
+          },
+          "uploadUrl": {
+            "type": "string"
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "method",
+          "uploadUrl",
+          "headers",
+          "expiresAt"
+        ]
+      },
+      "NotificationsResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationItemDto"
+            }
+          },
+          "truncated": {
+            "type": "boolean"
+          },
+          "unreadCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "items",
+          "truncated",
+          "unreadCount"
+        ]
+      },
+      "NotificationItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "CONFIRMATION",
+              "MODIFICATION",
+              "ANNULATION",
+              "DISPARITION",
+              "RESTAURATION"
+            ]
+          },
+          "absenceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "crecheName": {
+            "type": "string"
+          },
+          "employeeName": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "read": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "absenceId",
+          "title",
+          "message",
+          "crecheName",
+          "employeeName",
+          "createdAt",
+          "read"
+        ]
+      },
+      "NotificationMarkReadDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "read": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "read"
+        ]
+      },
+      "NotificationsUnreadCountDto": {
+        "type": "object",
+        "properties": {
+          "unreadCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "unreadCount"
+        ]
+      },
+      "ProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "DIRECTRICE",
+              "RO",
+              "RH",
+              "ADMINISTRATRICE",
+              "SUPERADMIN"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "ASSIGNED",
+              "ALL"
+            ],
+            "description": "ALL: global consultation; ASSIGNED: only the crèches listed"
+          },
+          "creches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileCrecheDto"
+            }
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "absences:create",
+                "absences:decide",
+                "access:manage:directrice",
+                "access:manage:ro",
+                "closures:attest",
+                "export:run",
+                "journal:read",
+                "notifications:read",
+                "profile:read",
+                "settings:read",
+                "sources:read",
+                "sources:refresh:aqoona",
+                "sources:refresh:payfit",
+                "sources:refresh:sheets"
+              ]
+            },
+            "description": "Capabilities held by the role (rule-evp-capabilities-list)"
+          },
+          "sessionExpiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End of the session: 8 hours after the issue of the token"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "role",
+          "active",
+          "scope",
+          "creches",
+          "capabilities",
+          "sessionExpiresAt"
+        ]
+      },
+      "ProfileCrecheDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "ScopesListResponseDto": {
+        "type": "object",
+        "properties": {
+          "scopes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScopeDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total number of scopes",
+            "example": 3
+          }
+        },
+        "required": [
+          "scopes",
+          "total"
+        ]
+      },
+      "ScopesCreateParamsDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,49}$",
+            "description": "Code of the scope (rule-foundation-scope-code-format): lowercase letters, digits, \"_\" and \"-\", not starting with a separator",
+            "example": "creche-1"
+          },
+          "name": {
+            "description": "Display name, trimmed, not empty",
+            "example": "Crèche du Parc",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "ScopesCreateResponseDto": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "$ref": "#/components/schemas/ScopeDto"
+          }
+        },
+        "required": [
+          "scope"
+        ]
+      },
+      "ScopesUpdateParamsDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "New display name, trimmed, not empty",
+            "example": "Crèche du Parc",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ScopesUpdateResponseDto": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "$ref": "#/components/schemas/ScopeDto"
+          }
+        },
+        "required": [
+          "scope"
+        ]
+      },
+      "HealthCheckResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "unhealthy"
+            ],
+            "description": "The overall status of the system"
+          },
+          "services": {
+            "type": "object",
+            "properties": {
+              "postgres": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "healthy",
+                      "unhealthy"
+                    ],
+                    "description": "Status of the service"
+                  },
+                  "latency": {
+                    "description": "Round-trip time of the probe, in milliseconds",
+                    "type": "number",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            },
+            "required": [
+              "postgres"
+            ],
+            "description": "Status of individual services"
+          }
+        },
+        "required": [
+          "status",
+          "services"
+        ]
+      },
+      "ServiceStatusResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "unavailable"
+            ]
+          },
+          "reason": {
+            "nullable": true,
+            "type": "string",
+            "enum": [
+              "google_not_configured",
+              "database_unreachable",
+              "maintenance"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "status",
+          "reason",
+          "message"
+        ]
+      },
+      "SettingsResponseDto": {
+        "type": "object",
+        "properties": {
+          "absenceTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SettingsAbsenceTypeDto"
+            }
+          },
+          "limits": {
+            "$ref": "#/components/schemas/SettingsLimitsDto"
+          },
+          "windows": {
+            "$ref": "#/components/schemas/SettingsWindowsDto"
+          },
+          "payfitWritesEnabled": {
+            "type": "boolean",
+            "enum": [
+              false
+            ],
+            "description": "Always false in v1: nothing is ever written to PayFit"
+          }
+        },
+        "required": [
+          "absenceTypes",
+          "limits",
+          "windows",
+          "payfitWritesEnabled"
+        ]
+      },
+      "SettingsAbsenceTypeDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "expectedPiece": {
+            "nullable": true,
+            "type": "string"
+          },
+          "privatePiece": {
+            "type": "boolean"
+          },
+          "hrReview": {
+            "type": "boolean"
+          },
+          "payfitCode": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "label",
+          "expectedPiece",
+          "privatePiece",
+          "hrReview",
+          "payfitCode"
+        ]
+      },
+      "SettingsLimitsDto": {
+        "type": "object",
+        "properties": {
+          "sessionHours": {
+            "type": "number",
+            "enum": [
+              8
+            ]
+          },
+          "uploadLinkMinutes": {
+            "type": "number",
+            "enum": [
+              5
+            ]
+          },
+          "readLinkSeconds": {
+            "type": "number",
+            "enum": [
+              60
+            ]
+          },
+          "maxFileBytes": {
+            "type": "number",
+            "enum": [
+              10485760
+            ]
+          },
+          "formats": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "PDF",
+                "JPEG",
+                "PNG"
+              ]
+            }
+          }
+        },
+        "required": [
+          "sessionHours",
+          "uploadLinkMinutes",
+          "readLinkSeconds",
+          "maxFileBytes",
+          "formats"
+        ]
+      },
+      "SettingsWindowsDto": {
+        "type": "object",
+        "properties": {
+          "payfit": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Window read in PayFit, in words"
+          },
+          "aqoona": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Window read in Aqoona, in words"
+          }
+        },
+        "required": [
+          "payfit",
+          "aqoona"
+        ]
+      },
+      "SourcesResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceItemDto"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "SourceItemDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "workspace",
+              "sheets",
+              "payfit",
+              "aqoona"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "NEVER_READ",
+              "UP_TO_DATE",
+              "RUNNING",
+              "ERROR",
+              "UNAVAILABLE",
+              "PARTIAL"
+            ]
+          },
+          "lastReadAt": {
+            "nullable": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          "currentRunId": {
+            "nullable": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          "volumes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "label",
+                "count"
+              ]
+            }
+          },
+          "anomalyCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "canRefresh": {
+            "type": "boolean"
+          },
+          "windowFrom": {
+            "nullable": true,
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "windowTo": {
+            "nullable": true,
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "lastError": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SourceLastErrorDto"
+              }
+            ]
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceAddressDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "state",
+          "lastReadAt",
+          "currentRunId",
+          "volumes",
+          "anomalyCount",
+          "canRefresh",
+          "windowFrom",
+          "windowTo",
+          "lastError",
+          "addresses"
+        ]
+      },
+      "SourceLastErrorDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "sources.not_configured",
+              "sources.unreachable",
+              "sources.refused",
+              "sources.rate_limited",
+              "sources.unexpected_format"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "at"
+        ]
+      },
+      "SourceAddressDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "masked": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "label",
+          "masked"
+        ]
+      },
+      "SourceAnomaliesResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "subject": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "label",
+                "subject",
+                "detail"
+              ]
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ]
+      },
+      "SourceStartRunResponseDto": {
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "RUNNING"
+            ]
+          }
+        },
+        "required": [
+          "runId",
+          "state"
+        ]
+      },
+      "SourceAqoonaMatchingRatesDto": {
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "lastReadAt": {
+            "nullable": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowFrom": {
+            "nullable": true,
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "windowTo": {
+            "nullable": true,
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "items": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "companyId": {
+                  "nullable": true,
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "siret": {
+                  "nullable": true,
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "total": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "linked": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "percent": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    }
+                  },
+                  "required": [
+                    "count",
+                    "percent"
+                  ]
+                },
+                "unlinked": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "percent": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    }
+                  },
+                  "required": [
+                    "count",
+                    "percent"
+                  ]
+                }
+              },
+              "required": [
+                "companyId",
+                "siret",
+                "name",
+                "total",
+                "linked",
+                "unlinked"
+              ]
+            }
+          }
+        },
+        "required": [
+          "available",
+          "lastReadAt",
+          "windowFrom",
+          "windowTo",
+          "items"
+        ]
+      },
+      "SourceAqoonaUnlinkedPeopleDto": {
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "lastReadAt": {
+            "nullable": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowFrom": {
+            "nullable": true,
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "windowTo": {
+            "nullable": true,
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "items": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "cause": {
+                  "type": "string",
+                  "enum": [
+                    "NIR_ABSENT",
+                    "NIR_KEY_INVALID",
+                    "NIR_UNKNOWN",
+                    "NIR_AMBIGUOUS",
+                    "PAYFIT_INCOMPLETE"
+                  ]
+                },
+                "causeLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "creches": {
+                  "maxItems": 50,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "cause",
+                "causeLabel",
+                "creches"
+              ]
+            }
+          }
+        },
+        "required": [
+          "available",
+          "lastReadAt",
+          "windowFrom",
+          "windowTo",
+          "total",
+          "items"
+        ]
+      },
+      "SourceStartAllResponseDto": {
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "sheets",
+                "payfit",
+                "aqoona"
+              ]
+            }
+          }
+        },
+        "required": [
+          "runId",
+          "steps"
+        ]
+      },
+      "SourceRunDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "RUNNING",
+              "SUCCEEDED",
+              "FAILED"
+            ]
+          },
+          "step": {
+            "nullable": true,
+            "type": "string"
+          },
+          "volumes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "label",
+                "count"
+              ]
+            }
+          },
+          "errorMessage": {
+            "nullable": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finishedAt": {
+            "nullable": true,
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "step",
+          "volumes",
+          "errorMessage",
+          "startedAt",
+          "finishedAt"
+        ]
+      },
+      "TodoResponseDto": {
+        "type": "object",
+        "properties": {
+          "counters": {
+            "type": "object",
+            "properties": {
+              "aCompleter": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "hint": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "count",
+                  "hint"
+                ]
+              },
+              "enAttente": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "hint": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "count",
+                  "hint"
+                ]
+              },
+              "refusees": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "hint": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "count",
+                  "hint"
+                ]
+              }
+            },
+            "required": [
+              "aCompleter",
+              "enAttente",
+              "refusees"
+            ]
+          },
+          "priority": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AbsenceSummaryDto"
+            }
+          },
+          "recentActivity": {
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "absenceId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "absenceId",
+                "at",
+                "text"
+              ]
+            }
+          }
+        },
+        "required": [
+          "counters",
+          "priority",
+          "recentActivity"
+        ]
+      },
+      "UsersListResponseDto": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total number of users matching the criteria",
+            "example": 100
+          }
+        },
+        "required": [
+          "users",
+          "total"
+        ]
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User ID",
+            "example": "123"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the user",
+            "example": "john.doe@example.com"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "user"
+            ],
+            "description": "Role name the user has"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupRefDto"
+            },
+            "description": "Groups the user belongs to (rule-foundation-user-groups-membership), sorted by name"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "role",
+          "groups"
+        ]
+      },
+      "GroupRefDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Group ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the group",
+            "example": "Équipe Nord"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "UsersCreateParamsDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "description": "Email of the user (at most 254 characters)",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 72,
+            "description": "Password of the user (8 to 72 characters)",
+            "example": "securePassword123"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "admin"
+            ],
+            "description": "Role of the user",
+            "example": "user"
+          },
+          "groupIds": {
+            "description": "Groups of the user (rule-foundation-user-groups-membership): distinct ids of existing groups, none by default",
+            "uniqueItems": true,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "role"
+        ]
+      },
+      "UsersCreateResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserDto"
+          }
+        },
+        "required": [
+          "user"
+        ]
+      },
+      "UserGetResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserDto"
+          }
+        },
+        "required": [
+          "user"
+        ]
+      },
+      "UsersUpdateParamsDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "description": "New role of the user",
+            "type": "string",
+            "enum": [
+              "user",
+              "admin"
+            ]
+          },
+          "groupIds": {
+            "description": "New groups of the user (replaces the current ones, [] removes all)",
+            "uniqueItems": true,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "UsersUpdateResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserDto"
+          }
+        },
+        "required": [
+          "user"
+        ]
+      },
+      "ImportConfirmResponseDto": {
+        "type": "object",
+        "properties": {
+          "importId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifier of the confirmed preview"
+          },
+          "createdCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Rows written"
+          },
+          "skippedCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Valid rows not written because the state changed since the preview"
+          },
+          "fileName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Name of the imported file"
+          }
+        },
+        "required": [
+          "importId",
+          "createdCount",
+          "skippedCount",
+          "fileName"
+        ]
+      },
+      "ImportErrorsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportRowErrorDto"
+            },
+            "description": "One page of entries, by row then by column"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of entries of the whole list (not of the rows)"
+          }
+        },
+        "required": [
+          "errors",
+          "total"
+        ]
+      },
+      "ImportRowErrorDto": {
+        "type": "object",
+        "properties": {
+          "row": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 2147483647,
+            "description": "Spreadsheet row number (the header is row 1)"
+          },
+          "column": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Name of the faulty column"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "What is wrong, in French"
+          }
+        },
+        "required": [
+          "row",
+          "column",
+          "reason"
+        ]
+      },
+      "ImportPreviewDto": {
+        "type": "object",
+        "properties": {
+          "importId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifier of the preview, to list its errors or confirm it"
+          },
+          "fileName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Name of the file as kept (directory part removed)"
+          },
+          "totalRows": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Non-blank data rows (validRows + errorRows)"
+          },
+          "validRows": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Rows that will be imported"
+          },
+          "errorRows": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Rows in error (a row counts once, whatever its number of faults)"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End of the preview: after it, the file must be sent again"
+          }
+        },
+        "required": [
+          "importId",
+          "fileName",
+          "totalRows",
+          "validRows",
+          "errorRows",
+          "expiresAt"
+        ]
+      },
+      "ImportSpecificationDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportColumnDto"
+            },
+            "description": "Columns the file may hold, in the order of the screen"
+          },
+          "maxFileSizeBytes": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Largest file accepted, in bytes"
+          },
+          "maxRows": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Largest number of data rows accepted"
+          },
+          "acceptedExtensions": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "File extensions accepted, with their dot"
+          }
+        },
+        "required": [
+          "columns",
+          "maxFileSizeBytes",
+          "maxRows",
+          "acceptedExtensions"
+        ]
+      },
+      "ImportColumnDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Name of the column in the header of the file"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Is the column mandatory?"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "What the column holds and the rule applied to it (French)"
+          }
+        },
+        "required": [
+          "name",
+          "required",
+          "description"
+        ]
+      }
+    }
+  }
+}
